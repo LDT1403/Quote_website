@@ -5,8 +5,8 @@ namespace Quote.Interfaces.ServiceInterface
 {
     public interface UserInterface
     {
-        List<User> GetUsers();
-        User Register(RegisterModal user);
+        Task<List<User>> GetUsersAsync();
+        Task<User> RegisterAsync(RegisterModal user);
 
     }
 }

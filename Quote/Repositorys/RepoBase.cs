@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Quote.Models;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Quote.Repositorys
 {
@@ -15,25 +17,24 @@ namespace Quote.Repositorys
             _dbSet = _context.Set<T>();
         }
 
-        public ICollection<T> GetAll()
+        public async Task<List<T>> GetAllAsync()
         {
             try
             {
-                return _dbSet.ToList();
+                return await _dbSet.ToListAsync();
             }
             catch (Exception ex)
             {
                 throw new Exception("Error getting entities: " + ex);
             }
         }
-      
 
-        public void Add(T entity)
+        public async System.Threading.Tasks.Task AddAsync(T entity)
         {
             try
             {
                 _dbSet.Add(entity);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -41,11 +42,12 @@ namespace Quote.Repositorys
             }
         }
 
-        public bool Delete(T entity)
+        public async Task<bool> DeleteAsync(T entity)
         {
             try
             {
                 _dbSet.Remove(entity);
+                await _context.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
@@ -54,13 +56,13 @@ namespace Quote.Repositorys
             }
         }
 
-        public void Update(T entity)
+        public async System.Threading.Tasks.Task UpdateAsync(T entity)
         {
             try
             {
                 var tracker = _dbSet.Attach(entity);
                 tracker.State = EntityState.Modified;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -68,4 +70,4 @@ namespace Quote.Repositorys
             }
         }
     }
-    }
+}

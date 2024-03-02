@@ -27,33 +27,47 @@ namespace Quote.Controllers
             _configuration = configuration;
         }
         [HttpGet]
-        public IActionResult GetUser()
+        public async Task<IActionResult> GetUser()
         {
-            return Ok(_userService.GetUsers());
+            try
+            {
+                var users = await _userService.GetUsersAsync();
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error: {ex.Message}");
+            }
         }
 
         [AllowAnonymous]
         [HttpPost("login")]
-
         public IActionResult Login([FromBody] LoginModal user)
         {
-
-            var _user = _userService.GetUsers().SingleOrDefault(p => p.Email == user.Email && p.Password == user.Password);
-            if (_user == null)
+            try
             {
+                var _user = _userService.GetUsersAsync().Result.SingleOrDefault(p => p.Email == user.Email && p.Password == user.Password);
+
+                if (_user == null)
+                {
+                    return Ok(new ResModal
+                    {
+                        Success = false,
+                        Message = "Invalid email or password"
+                    });
+                }
+
                 return Ok(new ResModal
                 {
-                    Success = false,
-                    Message = "Invalid email or password"
+                    Success = true,
+                    Message = "Success",
+                    Data = GenerateToken(_user)
                 });
             }
-
-            return Ok(new ResModal
+            catch (Exception ex)
             {
-                Success = true,
-                Message = "success",
-                Data = GenerateToken(_user)
-            });
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error: {ex.Message}");
+            }
         }
 
         private string GenerateToken(User user)
@@ -78,26 +92,31 @@ namespace Quote.Controllers
         [HttpPost("Register")]
         public async Task<ActionResult> Register(RegisterModal register)
         {
-            var regis = _userService.Register(register);
-            if (regis == null)
+            try
             {
-                return Ok(new ErrorRespon
-                {
-                    Error = false,
-                    Message = "Email đã tồn tại "
-                });
-            }
-            else
-            {
-                return Ok(new ErrorRespon
-                {
-                    Error = false,
-                    Message = "Regiter Success, Please Check your email"
-                });
+                var regis = await _userService.RegisterAsync(register);
 
+                if (regis == null)
+                {
+                    return Ok(new ErrorRespon
+                    {
+                        Error = false,
+                        Message = "Email đã tồn tại"
+                    });
+                }
+                else
+                {
+                    return Ok(new ErrorRespon
+                    {
+                        Error = false,
+                        Message = "Register Success"
+                    });
+                }
             }
-            
-            
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error: {ex.Message}");
+            }
         }
     }
 }

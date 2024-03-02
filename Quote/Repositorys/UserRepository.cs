@@ -12,18 +12,10 @@ namespace Quote.Repositorys
             _context = context;
         }
 
-        public bool IsEmailExists(string email)
+        public async Task<bool> IsEmailExists(string email)
         {
-            // Kiểm tra xem địa chỉ email đã tồn tại trong danh sách người dùng hay chưa
-            User exixst = _context.Users.FirstOrDefault(u => u.Email== email);
-            if (exixst != null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            User existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            return existingUser != null;
         }
     }
 }

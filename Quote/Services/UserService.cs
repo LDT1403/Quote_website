@@ -3,13 +3,14 @@ using Quote.Interfaces.ServiceInterface;
 using Quote.Modal;
 using Quote.Models;
 using Quote.Repositorys;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Quote.Services
 {
-
     public class UserService : UserInterface
     {
-
         private readonly UserRepository _repo;
         private readonly IMapper _mapper;
 
@@ -19,33 +20,38 @@ namespace Quote.Services
             _mapper = mapper;
         }
 
-        public List<User> GetUsers()
+        public async Task<List<User>> GetUsersAsync()
         {
-            return _repo.GetAll().ToList();
+            try
+            {
+                return await _repo.GetAllAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error getting users: " + ex.Message);
+            }
         }
 
-        public User Register(RegisterModal user)
+        public async Task<User> RegisterAsync(RegisterModal user)
         {
-             if(_repo.IsEmailExists(user.Email))
+            try
             {
-                return null;
-            }
-            else
-            {
-                try
-                {                  
-                    User usermodel= new User();
-
-                    var newuser = _mapper.Map(user, usermodel);
-                    newuser.Role = "CUS";
-                    
-                    _repo.Add(newuser);
-                    return newuser;
-                }
-                catch (Exception ex)
+                if (await _repo.IsEmailExists(user.Email))
                 {
-                    throw new Exception(ex.Message);
+                    return null;
                 }
+                else
+                {
+                    User userModel = _mapper.Map<RegisterModal, User>(user);
+                    userModel.Role = "CUS";
+
+                    await _repo.AddAsync(userModel);
+                    return userModel;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error registering user: " + ex.Message);
             }
         }
     }
