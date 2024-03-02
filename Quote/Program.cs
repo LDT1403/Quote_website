@@ -24,15 +24,32 @@ builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserInterface,UserService>();
 builder.Services.AddDbContext<DB_SWDContext>();
 builder.Services.AddAutoMapper(typeof(AutoMapperHandler).Assembly);
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer();
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//    .AddJwtBearer();
 builder.Services.ConfigureOptions<JwtOptionSetup>();
 builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
-builder.Services.AddAuthentication().AddGoogle(option =>
+builder.Services.AddAuthentication(option =>
 {
-    option.ClientId = builder.Configuration.GetSection("Google").GetValue<string>("ClientId");
-    option.ClientSecret = builder.Configuration.GetSection("Google").GetValue<string>("ClientSecret");
+    option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+
+}).AddJwtBearer(options => {
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = true;
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["JWT:Audience"],
+        ValidIssuer = builder.Configuration["JWT:Issuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]))
+    };
 });
+builder.Services.AddCors(option => option.AddPolicy("Quote", build =>
+{
+    build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+}));
 
 var app = builder.Build();
 
@@ -46,6 +63,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseCors("Quote");
 
 app.UseAuthentication();
 

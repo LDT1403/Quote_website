@@ -26,7 +26,9 @@ namespace Quote.Controllers
             _userService = userService;
             _configuration = configuration;
         }
+        
         [HttpGet]
+        [Authorize(Roles = "CUS")]
         public async Task<IActionResult> GetUser()
         {
             try
@@ -39,6 +41,7 @@ namespace Quote.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error: {ex.Message}");
             }
         }
+
 
         [AllowAnonymous]
         [HttpPost("login")]
