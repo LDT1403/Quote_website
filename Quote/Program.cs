@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Quote.Models;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,15 +20,45 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1",
+                  new OpenApiInfo { Title = "Tét Api", Version = "v1" });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "Standard Authorization header using the Bearer scheme. Example: \"bearer {token}\"",
+        In = ParameterLocation.Header,
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+   {
+       {
+           new OpenApiSecurityScheme
+           {
+               Reference = new OpenApiReference
+               {
+                   Type =ReferenceType.SecurityScheme,
+                   Id ="Bearer"
+               },
+               Scheme ="oauth2",
+               Name ="Bearer",
+               In = ParameterLocation.Header,
+           },
+           new List<string>()
+       }
+   });
+
+}
+);
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserInterface,UserService>();
 builder.Services.AddDbContext<DB_SWDContext>();
 builder.Services.AddAutoMapper(typeof(AutoMapperHandler).Assembly);
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //    .AddJwtBearer();
-builder.Services.ConfigureOptions<JwtOptionSetup>();
-builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
+
 builder.Services.AddAuthentication(option =>
 {
     option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -36,20 +67,26 @@ builder.Services.AddAuthentication(option =>
 
 }).AddJwtBearer(options => {
     options.SaveToken = true;
-    options.RequireHttpsMetadata = true;
+    options.RequireHttpsMetadata = false;
     options.TokenValidationParameters = new TokenValidationParameters()
     {
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidAudience = builder.Configuration["JWT:Audience"],
         ValidIssuer = builder.Configuration["JWT:Issuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:key"]))
     };
 });
-builder.Services.AddCors(option => option.AddPolicy("Quote", build =>
+builder.Services.AddCors(o =>
 {
-    build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
-}));
+    o.AddPolicy("AllowAnyOrigin", corsPolicyBuilder =>
+    {
+        corsPolicyBuilder.SetIsOriginAllowed(x => _ = true)
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials();
+    });
+});
 
 var app = builder.Build();
 
@@ -61,12 +98,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseCors("Quote");
+app.UseCors("AllowAnyOrigin");
 
-app.UseAuthentication();
+
 
 app.MapControllers();
 

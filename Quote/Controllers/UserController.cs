@@ -14,6 +14,7 @@ using System.Text;
 namespace Quote.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -28,7 +29,7 @@ namespace Quote.Controllers
         }
         
         [HttpGet]
-        [Authorize(Roles = "CUS")]
+       
         public async Task<IActionResult> GetUser()
         {
             try
@@ -87,7 +88,7 @@ namespace Quote.Controllers
 
             var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], _configuration["Jwt:Audience"],
                 claims,
-                expires: DateTime.Now.AddMinutes(5),
+                expires: DateTime.Now.AddHours(24),
                 signingCredentials: credentials);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
