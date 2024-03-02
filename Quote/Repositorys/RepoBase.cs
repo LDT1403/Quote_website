@@ -6,12 +6,12 @@ namespace Quote.Repositorys
 {
     public class RepoBase<T> where T : class
     {
-        private readonly DbSwdContext _context;
+        private readonly DB_SWDContext _context;
         private readonly DbSet<T> _dbSet;
 
         protected RepoBase()
         {
-            _context = new DbSwdContext();
+            _context = new DB_SWDContext();
             _dbSet = _context.Set<T>();
         }
 

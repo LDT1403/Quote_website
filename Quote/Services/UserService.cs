@@ -37,8 +37,8 @@ namespace Quote.Services
                     User usermodel= new User();
 
                     var newuser = _mapper.Map(user, usermodel);
-                    newuser.Type = "CUS";
-                    newuser.Cccd = "54545454";
+                    newuser.Role = "CUS";
+                    
                     _repo.Add(newuser);
                     return newuser;
                 }

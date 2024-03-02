@@ -65,7 +65,7 @@ namespace Quote.Controllers
                 new Claim("Id", user.UserId.ToString()),
                 new Claim("Email", user.Email),
                 new Claim("UserName" ,user.UserName),
-                new Claim(ClaimTypes.Role ,user.Type),
+                new Claim(ClaimTypes.Role ,user.Role),
             };
 
             var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], _configuration["Jwt:Audience"],
