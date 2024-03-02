@@ -69,5 +69,16 @@ namespace Quote.Repositorys
                 throw new Exception("Error updating entity: " + ex);
             }
         }
+        public async Task<T> GetByIdAsync(int id)
+        {
+            try
+            {
+                return await _dbSet.FindAsync(id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error getting entity by ID: {ex}");
+            }
+        }
     }
 }
