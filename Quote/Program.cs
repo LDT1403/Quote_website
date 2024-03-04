@@ -54,6 +54,11 @@ builder.Services.AddSwaggerGen(c =>
 );
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserInterface,UserService>();
+builder.Services.AddScoped<ProductRepository>();
+builder.Services.AddScoped<IProductService,ProductService>();
+builder.Services.AddScoped<ImageRepository>();
+builder.Services.AddScoped<OptionRepository>();
+
 builder.Services.AddDbContext<DB_SWDContext>();
 builder.Services.AddAutoMapper(typeof(AutoMapperHandler).Assembly);
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
