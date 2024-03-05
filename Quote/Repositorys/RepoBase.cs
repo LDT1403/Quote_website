@@ -95,5 +95,47 @@ namespace Quote.Repositorys
                 throw new Exception($"Error getting entity by ID: {ex}");
             }
         }
+        public async Task<T> AddReturnAsync(T entity)
+        {
+            try
+            {
+                _dbSet.Add(entity);
+                await _context.SaveChangesAsync();
+                return entity;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error adding entity: " + ex);
+            }
+        }
+        public async Task<bool> DeleteItemAsync(int id)
+        {
+            try
+            {
+                var entity = await _dbSet.FindAsync(id); // Tìm đối tượng cần xóa
+                if (entity == null)
+                {
+                    throw new Exception($"Entity with ID {id} not found.");
+                }
+
+                _dbSet.Remove(entity); 
+                await _context.SaveChangesAsync(); 
+                return true; 
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error deleting entity: " + ex.Message);
+            }
+        }
+        public IQueryable<T> GetInclude(params string[] navigationProperties)
+        {
+            IQueryable<T> query = _dbSet;
+            foreach (string navigationProperty in navigationProperties)
+            {
+                query = query.Include(navigationProperty);
+            }
+            return query;
+        }
+      
     }
 }

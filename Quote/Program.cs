@@ -62,7 +62,9 @@ builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<ImageRepository>();
 builder.Services.AddScoped<ProductModal>();
 builder.Services.AddScoped<OptionRepository>();
-
+builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<CartRepository>();
+builder.Services.AddScoped<CartDetailRepository>();
 builder.Services.AddDbContext<DB_SWDContext>();
 builder.Services.AddAutoMapper(typeof(AutoMapperHandler).Assembly);
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

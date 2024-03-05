@@ -1,6 +1,8 @@
-﻿namespace Quote.Repositorys
+﻿using Quote.Models;
+
+namespace Quote.Repositorys
 {
-    public class CartRepository
+    public class CartRepository : RepoBase<Cart>
     {
     }
 }
