@@ -2,20 +2,29 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Quote.Models;
 
+[Table("Option")]
 public partial class Option
 {
-    public string OptionId { get; set; }
+    [Key]
+    public int OptionId { get; set; }
 
     public int? ProductId { get; set; }
 
+    [StringLength(500)]
     public string OptionName { get; set; }
 
+    [StringLength(50)]
     public string Price { get; set; }
 
     public int? Quantity { get; set; }
 
+    [ForeignKey("ProductId")]
+    [InverseProperty("Options")]
     public virtual Product Product { get; set; }
 }

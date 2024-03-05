@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Quote.Models;
 using Microsoft.OpenApi.Models;
+using Quote.Modal;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,7 +57,10 @@ builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserInterface,UserService>();
 builder.Services.AddScoped<ProductRepository>();
 builder.Services.AddScoped<IProductService,ProductService>();
+builder.Services.AddScoped<IOptionService, OptionService>();
+builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<ImageRepository>();
+builder.Services.AddScoped<ProductModal>();
 builder.Services.AddScoped<OptionRepository>();
 
 builder.Services.AddDbContext<DB_SWDContext>();
@@ -107,7 +111,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseCors("AllowAnyOrigin");
-
+app.UseStaticFiles();
 
 
 app.MapControllers();

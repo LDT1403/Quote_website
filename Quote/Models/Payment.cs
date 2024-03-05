@@ -2,26 +2,38 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Quote.Models;
 
+[Table("Payment")]
 public partial class Payment
 {
+    [Key]
     public int PaymentId { get; set; }
 
     public int? ContractId { get; set; }
 
+    [StringLength(50)]
     public string PricePay { get; set; }
 
+    [Column(TypeName = "date")]
     public DateTime? DatePay { get; set; }
 
     public bool? Status { get; set; }
 
+    [StringLength(250)]
     public string Method { get; set; }
 
     public int? UserId { get; set; }
 
+    [ForeignKey("ContractId")]
+    [InverseProperty("Payments")]
     public virtual Contract Contract { get; set; }
 
+    [ForeignKey("UserId")]
+    [InverseProperty("Payments")]
     public virtual User User { get; set; }
 }

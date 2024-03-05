@@ -8,15 +8,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Quote.Models;
 
-[Table("Category")]
-public partial class Category
+[Table("Notification")]
+public partial class Notification
 {
     [Key]
-    public int CategoryId { get; set; }
+    public int NotiId { get; set; }
+
+    public int? UserId { get; set; }
 
     [StringLength(500)]
-    public string CateName { get; set; }
+    public string Script { get; set; }
 
-    [InverseProperty("Category")]
-    public virtual ICollection<Product> Products { get; set; } = new List<Product>();
+    [Column(TypeName = "datetime")]
+    public DateTime? Time { get; set; }
 }

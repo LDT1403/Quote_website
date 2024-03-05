@@ -14,7 +14,7 @@ using System.Text;
 namespace Quote.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+  
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -121,6 +121,19 @@ namespace Quote.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error: {ex.Message}");
             }
+        }
+        [HttpPost]
+        [Route("logout")]
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            var userClaims = User.Claims.ToList();
+            var tokenClaim = userClaims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti);
+            if (tokenClaim != null)
+            {
+                userClaims.Remove(tokenClaim);
+            }
+            return Ok();
         }
     }
 }

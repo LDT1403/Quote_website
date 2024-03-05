@@ -42,13 +42,26 @@ namespace Quote.Repositorys
             }
         }
 
-        public async Task<bool> DeleteAsync(T entity)
+        public async System.Threading.Tasks.Task Save()
+        {
+            try
+            {
+              
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error adding entity: " + ex);
+            }
+        }
+
+        public async Task<T> DeleteAsync(T entity)
         {
             try
             {
                 _dbSet.Remove(entity);
                 await _context.SaveChangesAsync();
-                return true;
+                return entity;
             }
             catch (Exception ex)
             {
@@ -56,19 +69,21 @@ namespace Quote.Repositorys
             }
         }
 
-        public async System.Threading.Tasks.Task UpdateAsync(T entity)
+        public async Task<T> UpdateAsync(T entity)
         {
             try
             {
                 var tracker = _dbSet.Attach(entity);
                 tracker.State = EntityState.Modified;
                 await _context.SaveChangesAsync();
+                return entity;
             }
             catch (Exception ex)
             {
                 throw new Exception("Error updating entity: " + ex);
             }
         }
+
         public async Task<T> GetByIdAsync(int id)
         {
             try

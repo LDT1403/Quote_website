@@ -10,15 +10,12 @@ public partial class DB_SWDContext : DbContext
 {
     public DB_SWDContext()
     {
-
     }
+
     public DB_SWDContext(DbContextOptions<DB_SWDContext> options)
         : base(options)
     {
-
     }
-
-
 
     public virtual DbSet<Cart> Carts { get; set; }
 
@@ -29,6 +26,8 @@ public partial class DB_SWDContext : DbContext
     public virtual DbSet<Contract> Contracts { get; set; }
 
     public virtual DbSet<Image> Images { get; set; }
+
+    public virtual DbSet<Notification> Notifications { get; set; }
 
     public virtual DbSet<Option> Options { get; set; }
 
@@ -63,188 +62,69 @@ public partial class DB_SWDContext : DbContext
     {
         modelBuilder.Entity<Cart>(entity =>
         {
-            entity.ToTable("Cart");
-
-            entity.HasIndex(e => e.UserId, "UQ__Cart__1788CC4D312D2B25").IsUnique();
-
-            entity.Property(e => e.CartId).ValueGeneratedNever();
-
             entity.HasOne(d => d.User).WithOne(p => p.Cart)
-                .HasForeignKey<Cart>(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Cart_Users");
         });
 
         modelBuilder.Entity<CartDetail>(entity =>
         {
-            entity.ToTable("CartDetail");
+            entity.HasOne(d => d.Cart).WithMany(p => p.CartDetails).HasConstraintName("FK_CartDetail_Cart");
 
-            entity.HasOne(d => d.Cart).WithMany(p => p.CartDetails)
-                .HasForeignKey(d => d.CartId)
-                .HasConstraintName("FK_CartDetail_Cart");
-
-            entity.HasOne(d => d.Product).WithMany(p => p.CartDetails)
-                .HasForeignKey(d => d.ProductId)
-                .HasConstraintName("FK_CartDetail_Product");
-        });
-
-        modelBuilder.Entity<Category>(entity =>
-        {
-            entity.ToTable("Category");
-
-            entity.Property(e => e.CateName).HasMaxLength(500);
+            entity.HasOne(d => d.Product).WithMany(p => p.CartDetails).HasConstraintName("FK_CartDetail_Product");
         });
 
         modelBuilder.Entity<Contract>(entity =>
         {
-            entity.ToTable("Contract");
-
-            entity.HasIndex(e => e.RequestId, "UQ__Contract__33A8517B5AFD399E").IsUnique();
-
-            entity.Property(e => e.ConPrice).HasMaxLength(50);
-            entity.Property(e => e.FinalPrice).HasMaxLength(50);
-
-            entity.HasOne(d => d.Request).WithOne(p => p.Contract)
-                .HasForeignKey<Contract>(d => d.RequestId)
-                .HasConstraintName("FK_Contract_Request");
+            entity.HasOne(d => d.Request).WithOne(p => p.Contract).HasConstraintName("FK_Contract_Request");
         });
 
         modelBuilder.Entity<Image>(entity =>
         {
-            entity.ToTable("Image");
-
-            entity.Property(e => e.Description).HasColumnType("ntext");
-            entity.Property(e => e.Image1)
-                .HasMaxLength(50)
-                .HasColumnName("Image");
-
-            entity.HasOne(d => d.Product).WithMany(p => p.Images)
-                .HasForeignKey(d => d.ProductId)
-                .HasConstraintName("FK_Image_Product");
+            entity.HasOne(d => d.Product).WithMany(p => p.Images).HasConstraintName("FK_Image_Product");
         });
 
         modelBuilder.Entity<Option>(entity =>
         {
-            entity.ToTable("Option");
-
-            entity.Property(e => e.OptionId)
-                .HasMaxLength(10)
-                .IsFixedLength();
-            entity.Property(e => e.OptionName).HasMaxLength(500);
-            entity.Property(e => e.Price).HasMaxLength(50);
-
-            entity.HasOne(d => d.Product).WithMany(p => p.Options)
-                .HasForeignKey(d => d.ProductId)
-                .HasConstraintName("FK_Option_Product");
+            entity.HasOne(d => d.Product).WithMany(p => p.Options).HasConstraintName("FK_Option_Product");
         });
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.ToTable("Payment");
+            entity.HasOne(d => d.Contract).WithMany(p => p.Payments).HasConstraintName("FK_Payment_Contract");
 
-            entity.Property(e => e.DatePay).HasColumnType("date");
-            entity.Property(e => e.Method).HasMaxLength(250);
-            entity.Property(e => e.PricePay).HasMaxLength(50);
-
-            entity.HasOne(d => d.Contract).WithMany(p => p.Payments)
-                .HasForeignKey(d => d.ContractId)
-                .HasConstraintName("FK_Payment_Contract");
-
-            entity.HasOne(d => d.User).WithMany(p => p.Payments)
-                .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK_Payment_Users");
+            entity.HasOne(d => d.User).WithMany(p => p.Payments).HasConstraintName("FK_Payment_Users");
         });
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.ToTable("Product");
-
-            entity.Property(e => e.Description).HasColumnType("ntext");
-            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
-            entity.Property(e => e.Price).HasMaxLength(50);
-            entity.Property(e => e.ProductName).HasMaxLength(500);
-
-            entity.HasOne(d => d.Category).WithMany(p => p.Products)
-                .HasForeignKey(d => d.CategoryId)
-                .HasConstraintName("FK_Product_Category");
+            entity.HasOne(d => d.Category).WithMany(p => p.Products).HasConstraintName("FK_Product_Category");
         });
 
         modelBuilder.Entity<Request>(entity =>
         {
-            entity.ToTable("Request");
+            entity.HasOne(d => d.Product).WithMany(p => p.Requests).HasConstraintName("FK_Request_Product");
 
-            entity.Property(e => e.Address).HasMaxLength(500);
-            entity.Property(e => e.Date).HasColumnType("date");
-            entity.Property(e => e.Email).HasMaxLength(250);
-
-            entity.HasOne(d => d.Product).WithMany(p => p.Requests)
-                .HasForeignKey(d => d.ProductId)
-                .HasConstraintName("FK_Request_Product");
-
-            entity.HasOne(d => d.User).WithMany(p => p.Requests)
-                .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK_Request_Users");
-        });
-
-        modelBuilder.Entity<RequestDetail>(entity =>
-        {
-            entity.ToTable("RequestDetail");
+            entity.HasOne(d => d.User).WithMany(p => p.Requests).HasConstraintName("FK_Request_Users");
         });
 
         modelBuilder.Entity<Task>(entity =>
         {
-            entity.ToTable("Task");
+            entity.HasOne(d => d.Request).WithOne(p => p.Task).HasConstraintName("FK_Task_Request");
 
-            entity.HasIndex(e => e.RequestId, "UQ__Task__33A8517B52585AA5").IsUnique();
-
-            entity.Property(e => e.Location).HasMaxLength(500);
-            entity.Property(e => e.TaskName).HasMaxLength(500);
-
-            entity.HasOne(d => d.Request).WithOne(p => p.Task)
-                .HasForeignKey<Task>(d => d.RequestId)
-                .HasConstraintName("FK_Task_Request");
-
-            entity.HasOne(d => d.User).WithMany(p => p.Tasks)
-                .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK_Task_Users");
+            entity.HasOne(d => d.User).WithMany(p => p.Tasks).HasConstraintName("FK_Task_Users");
         });
 
         modelBuilder.Entity<Token>(entity =>
         {
             entity.HasKey(e => e.TokeId).HasName("PK_tb_Token");
 
-            entity.ToTable("Token");
-
-            entity.Property(e => e.TokeId)
-                .ValueGeneratedNever()
-                .HasColumnName("TokeID");
-            entity.Property(e => e.ExpiryDate).HasColumnType("datetime");
-            entity.Property(e => e.Token1)
-                .HasColumnType("ntext")
-                .HasColumnName("Token");
-            entity.Property(e => e.UserId).HasColumnName("UserID");
-
-            entity.HasOne(d => d.User).WithMany(p => p.Tokens)
-                .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK_Token_User");
+            entity.HasOne(d => d.User).WithMany(p => p.Tokens).HasConstraintName("FK_Token_User");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasIndex(e => e.UserId, "UQ__Users__1788CC4D62F95C3A").IsUnique();
-
-            entity.Property(e => e.Dob).HasColumnType("date");
-            entity.Property(e => e.Image).HasMaxLength(50);
-            entity.Property(e => e.Password).HasMaxLength(250);
-            entity.Property(e => e.Phone).HasMaxLength(50);
-            entity.Property(e => e.Position).HasMaxLength(250);
-            entity.Property(e => e.Email).HasMaxLength(250);
-            entity.Property(e => e.Role).HasMaxLength(250);
-            entity.Property(e => e.UserName).HasMaxLength(250);
-
-            entity.HasOne(d => d.Manager).WithMany(p => p.InverseManager)
-                .HasForeignKey(d => d.ManagerId)
-                .HasConstraintName("FK_Users_Users");
+            entity.HasOne(d => d.Manager).WithMany(p => p.InverseManager).HasConstraintName("FK_Users_Users");
         });
 
         OnModelCreatingPartial(modelBuilder);

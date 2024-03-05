@@ -2,44 +2,65 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Quote.Models;
 
+[Index("UserId", Name = "UQ__Users__1788CC4D62F95C3A", IsUnique = true)]
 public partial class User
 {
+    [Key]
     public int UserId { get; set; }
 
+    [StringLength(250)]
     public string UserName { get; set; }
 
+    [StringLength(250)]
     public string Password { get; set; }
 
+    [StringLength(50)]
     public string Phone { get; set; }
 
+    [StringLength(250)]
     public string Role { get; set; }
 
     public bool? Status { get; set; }
 
+    [MaxLength(50)]
     public byte[] Image { get; set; }
 
-    public string Email { get; set; }
-
+    [Column(TypeName = "date")]
     public DateTime? Dob { get; set; }
 
     public int? ManagerId { get; set; }
 
+    [StringLength(250)]
     public string Position { get; set; }
 
+    [StringLength(250)]
+    public string Email { get; set; }
+
+    [InverseProperty("User")]
     public virtual Cart Cart { get; set; }
 
+    [InverseProperty("Manager")]
     public virtual ICollection<User> InverseManager { get; set; } = new List<User>();
 
+    [ForeignKey("ManagerId")]
+    [InverseProperty("InverseManager")]
     public virtual User Manager { get; set; }
 
+    [InverseProperty("User")]
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
+    [InverseProperty("User")]
     public virtual ICollection<Request> Requests { get; set; } = new List<Request>();
 
+    [InverseProperty("User")]
     public virtual ICollection<Task> Tasks { get; set; } = new List<Task>();
 
+    [InverseProperty("User")]
     public virtual ICollection<Token> Tokens { get; set; } = new List<Token>();
 }

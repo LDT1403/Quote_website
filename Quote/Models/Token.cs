@@ -2,18 +2,29 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Quote.Models;
 
+[Table("Token")]
 public partial class Token
 {
+    [Key]
+    [Column("TokeID")]
     public int TokeId { get; set; }
 
+    [Column("Token", TypeName = "ntext")]
     public string Token1 { get; set; }
 
+    [Column("UserID")]
     public int? UserId { get; set; }
 
+    [Column(TypeName = "datetime")]
     public DateTime? ExpiryDate { get; set; }
 
+    [ForeignKey("UserId")]
+    [InverseProperty("Tokens")]
     public virtual User User { get; set; }
 }

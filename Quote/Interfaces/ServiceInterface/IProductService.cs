@@ -9,5 +9,13 @@ namespace Quote.Interfaces.ServiceInterface
         Task<List<Image>> GetImageAsync();
         Task<List<Option>> GetOptionAsync();
 
+        Task<Product> DeleteProduct(int id);
+
+        System.Threading.Tasks.Task Save();
+
+        Task<Product> UpdateProduct(int id,ProductModal product);
+
+        Task<int> AddProduct(Product product);
+
     }
 }
