@@ -3,9 +3,11 @@ using Azure.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Writers;
+using Quote.Helper;
 using Quote.Interfaces.ServiceInterface;
 using Quote.Modal;
 using Quote.Models;
+using System.Text.RegularExpressions;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Quote.Controllers
@@ -31,66 +33,71 @@ namespace Quote.Controllers
         }
 
         [HttpPost("AddProduct")]
-        public async Task<IActionResult> CreateProduct([FromForm] ProductModal product)
+        public async Task<IActionResult> CreateProduct([FromBody] ProductModal product)
         {
             ApiResponse res = new ApiResponse();
-            int passcount = 0; int errorcount = 0;
-
             try
+
             {
-                var newPro = _mapper.Map<ProductModal, Product>(product);
-                newPro.IsDelete = false;
+                var newPro = new Product()
+                {
+                    ProductName = product.ProductName,
+                    Description = product.Description,
+                    CategoryId = product.CategoryId,
+                    Price = product.Price,
+                    IsDelete = product.isDelete,
+                };
                 var id = await _productService.AddProduct(newPro);
-
                 res.Result = id.ToString();
-                int count = 0;
-                //foreach(var opt in product.Options)
-                //{
-                //    var newOpt = new Option()
-                //    {
-                //        ProductId = id,
-                //        OptionName = opt.OptionName,
-                //        Quantity = int.Parse(opt.OptionQuantity),
-                //    };
-                //    await _optionService.AddOptions(newOpt);
-                //    count++;
-                //}
-
                 string Filepath = GetFilepath(id.ToString());
-                if (!System.IO.Directory.Exists(Filepath))
+                if (!Directory.Exists(Filepath))
                 {
-                    System.IO.Directory.CreateDirectory(Filepath);
+                    Directory.CreateDirectory(Filepath);
                 }
-                foreach (var file in product.formFiles)
+                foreach (var image in product.Imagess)
                 {
-                    string imagepath = Filepath + "\\" + file.FileName;
-                    if (System.IO.File.Exists(imagepath))
+
+                    var base64Data = Regex.Match(image.base24, @"data:image\/[a-zA-Z]+;base64,(?<data>.+)").Groups["data"].Value;
+                    var imageBytes = Convert.FromBase64String(base64Data);
+                    using (var ms = new MemoryStream(imageBytes))
                     {
-                        System.IO.File.Delete(imagepath);
-                    }
-                    using (FileStream stream = System.IO.File.Create(imagepath))
-                    {
-                        await file.CopyToAsync(stream);
+                        var fileName = Guid.NewGuid().ToString() + ".jpeg";
+                        var filePath = Path.Combine(Filepath, fileName);
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            ms.CopyTo(fileStream);
+                           
+                        }
                         var img = new Models.Image()
                         {
                             ProductId = id,
                             Description = product.Description,
-                            ImagePath = GetImageProductPath(id, file.FileName),
+                            ImagePath = GetImageProductPath(id, fileName),
 
                         };
                         await _imageService.AddImage(img);
-                        passcount++;
+
+
                     }
                 }
-            } catch (Exception ex)
+                foreach (var opt in product.Options)
+                {
+                    var newOpt = new Option()
+                    {
+                        ProductId = id,
+                        OptionName = opt.OptionName,
+                        Quantity = int.Parse(opt.OptionQuantity),
+                    };
+                    await _optionService.AddOptions(newOpt);
+                }
+
+            }
+            catch (Exception ex)
             {
-                errorcount++;
                 res.Errormessage = ex.Message;
             }
-            res.ResponseCode = 200;
 
-
-            return Ok(res);
+            return Ok();
         }
 
         [NonAction]
@@ -131,7 +138,8 @@ namespace Quote.Controllers
             {
                 return Ok("Delete Product Success");
 
-            } else { return BadRequest(); }
+            }
+            else { return BadRequest(); }
 
         }
 
@@ -140,100 +148,101 @@ namespace Quote.Controllers
         {
             try
             {
-                var opt = await _optionService.Update(productId,options);
+                var opt = await _optionService.Update(productId, options);
                 if (opt != null)
                 {
                     return Ok(opt);
                 }
                 return BadRequest();
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
 
-        
-        [HttpPut("Update_Product")]
 
-        public async Task<IActionResult> UpdateProduct(ProductModal product, int productId)
-        {
-            ApiResponse res = new ApiResponse();
-            int passcount = 0;
-            int errorcount = 0;
-            int maxImageCount = 6;
-            try
-            {
-                var pro = await _productService.UpdateProduct(productId, product);
-                if (pro != null)
-                {
-                    if (product.formFiles == null || product.formFiles.Length == 0)
-                    {
-                        await _productService.Save();
+        //[HttpPut("Update_Product")]
 
-                        return Ok("Add product successfully");
-                    }
-                    else
-                    {
+        //public async Task<IActionResult> UpdateProduct(ProductModal product, int productId)
+        //{
+        //    ApiResponse res = new ApiResponse();
+        //    int passcount = 0;
+        //    int errorcount = 0;
+        //    int maxImageCount = 6;
+        //    try
+        //    {
+        //        var pro = await _productService.UpdateProduct(productId, product);
+        //        if (pro != null)
+        //        {
+        //            if (product.formFiles == null || product.formFiles.Length == 0)
+        //            {
+        //                await _productService.Save();
 
-                        string Filepath = GetFilepath(pro.ProductId.ToString());
-                        if (System.IO.Directory.Exists(Filepath))
-                        {
-                            DirectoryInfo directoryInfo = new DirectoryInfo(Filepath);
-                            FileInfo[] fileInfos = directoryInfo.GetFiles();
-                            foreach (FileInfo fileInfo in fileInfos)
-                            {
-                                fileInfo.Delete();
-                            }
+        //                return Ok("Add product successfully");
+        //            }
+        //            else
+        //            {
 
-                        }
-                        var imagesToRemove = await _imageService.DeleteImg(productId);
-                        string Filepath1 = GetFilepath(pro.ProductId.ToString());
-                        if (!Directory.Exists(Filepath1))
-                        {
-                            Directory.CreateDirectory(Filepath1);
-                        }
-                        int imageCount = 0;
+        //                string Filepath = GetFilepath(pro.ProductId.ToString());
+        //                if (System.IO.Directory.Exists(Filepath))
+        //                {
+        //                    DirectoryInfo directoryInfo = new DirectoryInfo(Filepath);
+        //                    FileInfo[] fileInfos = directoryInfo.GetFiles();
+        //                    foreach (FileInfo fileInfo in fileInfos)
+        //                    {
+        //                        fileInfo.Delete();
+        //                    }
 
-                        foreach (var file in product.formFiles)
-                        {
-                            if (imageCount >= maxImageCount)
-                            {
-                                break;
-                            }
+        //                }
+        //                var imagesToRemove = await _imageService.DeleteImg(productId);
+        //                string Filepath1 = GetFilepath(pro.ProductId.ToString());
+        //                if (!Directory.Exists(Filepath1))
+        //                {
+        //                    Directory.CreateDirectory(Filepath1);
+        //                }
+        //                int imageCount = 0;
 
-                            var img = new Models.Image()
-                            {
-                                ProductId = pro.ProductId,
-                                Description = product.Description,
-                                ImagePath = GetImageProductPath(pro.ProductId, file.FileName),
+        //                foreach (var file in product.formFiles)
+        //                {
+        //                    if (imageCount >= maxImageCount)
+        //                    {
+        //                        break;
+        //                    }
 
-                            };
-                            string imagepath = Path.Combine(Filepath, file.FileName);
-                            if (System.IO.File.Exists(imagepath))
-                            {
-                                System.IO.File.Delete(imagepath);
-                            }
-                            using (FileStream stream = System.IO.File.Create(imagepath))
-                            {
-                                await file.CopyToAsync(stream);
-                                passcount++;
-                            }
-                            await _imageService.AddImage(img);
-                            imageCount++;
-                        }
-                        res.Result = "Update Success";
-                    }
-                }
-                        }
-                        catch (Exception ex)
-                        {
-                            errorcount++;
-                            res.Errormessage = ex.Message;
-                        }
-                        res.ResponseCode = 200;
+        //                    var img = new Models.Image()
+        //                    {
+        //                        ProductId = pro.ProductId,
+        //                        Description = product.Description,
+        //                        ImagePath = GetImageProductPath(pro.ProductId, file.FileName),
+
+        //                    };
+        //                    string imagepath = Path.Combine(Filepath, file.FileName);
+        //                    if (System.IO.File.Exists(imagepath))
+        //                    {
+        //                        System.IO.File.Delete(imagepath);
+        //                    }
+        //                    using (FileStream stream = System.IO.File.Create(imagepath))
+        //                    {
+        //                        await file.CopyToAsync(stream);
+        //                        passcount++;
+        //                    }
+        //                    await _imageService.AddImage(img);
+        //                    imageCount++;
+        //                }
+        //                res.Result = "Update Success";
+        //            }
+        //        }
+        //                }
+        //                catch (Exception ex)
+        //                {
+        //                    errorcount++;
+        //                    res.Errormessage = ex.Message;
+        //                }
+        //                res.ResponseCode = 200;
 
 
-                        return Ok(res);
-                    }
-                }  
+        //                return Ok(res);
+        //            }
+    }
 }
