@@ -20,6 +20,28 @@ namespace Quote.Services
             _mapper = mapper;
         }
 
+        public async Task<List<User>> GetStaffByStatus(int staffid)
+        {
+            try
+            {
+                var list = await _repo.GetAllAsync();
+
+                if(list != null)
+                {
+                    list = list.Where(p=> p.ManagerId == staffid && p.Status == true).ToList();
+                    return list;
+                }
+                else
+                {
+                    return null;
+                }
+
+            }catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public async Task<List<User>> GetUsersAsync()
         {
             try

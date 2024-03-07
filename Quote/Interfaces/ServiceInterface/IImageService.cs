@@ -8,5 +8,7 @@ namespace Quote.Interfaces.ServiceInterface
         System.Threading.Tasks.Task AddImage(Image img);
 
         Task<Image> DeleteImg(int id);
+
+        Task<List<Image>> GetImgById(int productId);
     }
 }

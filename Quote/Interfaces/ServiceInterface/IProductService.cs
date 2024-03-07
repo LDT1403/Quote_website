@@ -17,5 +17,9 @@ namespace Quote.Interfaces.ServiceInterface
 
         Task<int> AddProduct(Product product);
 
+        Task<List<Product>> GetAllProduct();
+
+        Task<Product> GetProductById(int id);
+
     }
 }

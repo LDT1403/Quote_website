@@ -8,7 +8,7 @@ namespace Quote.Interfaces.ServiceInterface
         Task<List<User>> GetUsersAsync();
         Task<User> RegisterAsync(RegisterModal user);
 
-       
+        Task<List<User>> GetStaffByStatus(int staffid);
 
     }
 }

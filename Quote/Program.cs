@@ -59,6 +59,8 @@ builder.Services.AddScoped<ProductRepository>();
 builder.Services.AddScoped<IProductService,ProductService>();
 builder.Services.AddScoped<IOptionService, OptionService>();
 builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddScoped<ITaskInterface, TaskService>();
+builder.Services.AddScoped<TaskRepository>();
 builder.Services.AddScoped<ImageRepository>();
 builder.Services.AddScoped<ProductModal>();
 builder.Services.AddScoped<OptionRepository>();

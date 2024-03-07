@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Azure.Core;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Writers;
@@ -16,14 +17,16 @@ namespace Quote.Controllers
         private readonly IProductService _productService;
         private readonly IOptionService _optionService;
         private readonly IImageService _imageService;
+        private readonly UserInterface _userService;
         private readonly IMapper _mapper;
-        public StaffController(IWebHostEnvironment webHostEnvironment, IProductService productService, IOptionService optionService, IImageService imageService, IMapper mapper)
+        public StaffController(IWebHostEnvironment webHostEnvironment, IProductService productService, IOptionService optionService, IImageService imageService, IMapper mapper, UserInterface userService)
         {
             _webHostEnvironment = webHostEnvironment;
             _productService = productService;
             _optionService = optionService;
             _imageService = imageService;
             _mapper = mapper;
+            _userService = userService;
         }
         public IActionResult Index()
         {
@@ -93,6 +96,51 @@ namespace Quote.Controllers
             return Ok(res);
         }
 
+        [HttpGet("GetAllProduct")]
+
+        public async Task<IActionResult> GetAllProduct()
+        {
+            try
+            {
+                var allPro = await _productService.GetAllProduct();
+                if (allPro != null)
+                {
+                    return Ok(allPro);
+                }
+                return BadRequest();
+
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("GetProductById/{productId}")]
+        public async Task<IActionResult> GetProductById(int productId)
+        {
+            try
+            {
+                var pro = await _productService.GetProductById(productId);
+                var img = await _imageService.GetImgById(productId);
+                var opt = await _optionService.GetOptionById(productId);
+
+                ResProduct res = new ResProduct();
+
+                if (pro != null && img != null && opt != null)
+                {
+                    res.Product = pro;
+                    res.Images = img;
+                    res.options = opt;
+                    return Ok(res);
+                }
+                return BadRequest();
+
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [NonAction]
         private string GetFilepath(string code)
         {
@@ -140,20 +188,52 @@ namespace Quote.Controllers
         {
             try
             {
-                var opt = await _optionService.Update(productId,options);
+                var opt = await _optionService.Update(productId, options);
                 if (opt != null)
                 {
                     return Ok(opt);
                 }
                 return BadRequest();
-            }catch(Exception ex)
+            } catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
 
-        
-        [HttpPut("Update_Product")]
+
+        [HttpGet("GetAllStaffByStatus/{staffId}")]
+        public async Task<IActionResult> GetAllStaffByStatus(int staffId)
+        {
+            try
+            {
+                var list = await _userService.GetStaffByStatus(staffId);
+                if (list != null)
+                {
+                    List<StaffResponse> response = new List<StaffResponse>();
+                    
+
+                    foreach (var item in list)
+                    {
+                        StaffResponse staffResponse = new StaffResponse();
+                        staffResponse.UserId = item.UserId;
+                        staffResponse.UserName = item.UserName;
+                       staffResponse.Status =item.Status;
+                        response.Add(staffResponse);
+                    }
+
+                    return Ok(response);
+                }
+                return NotFound();
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+            [HttpPut("Update_Product")]
 
         public async Task<IActionResult> UpdateProduct(ProductModal product, int productId)
         {
@@ -224,16 +304,19 @@ namespace Quote.Controllers
                         res.Result = "Update Success";
                     }
                 }
-                        }
-                        catch (Exception ex)
-                        {
-                            errorcount++;
-                            res.Errormessage = ex.Message;
-                        }
-                        res.ResponseCode = 200;
+            }
+            catch (Exception ex)
+            {
+                errorcount++;
+                res.Errormessage = ex.Message;
+            }
+            res.ResponseCode = 200;
 
 
-                        return Ok(res);
-                    }
-                }  
+            return Ok(res);
+        }
+    }
+
+
+    
 }

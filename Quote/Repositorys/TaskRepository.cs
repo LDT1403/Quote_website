@@ -1,6 +1,8 @@
-﻿namespace Quote.Repositorys
+﻿
+
+namespace Quote.Repositorys
 {
-    public class TaskRepository
+    public class TaskRepository : RepoBase<Models.Task>
     {
     }
 }

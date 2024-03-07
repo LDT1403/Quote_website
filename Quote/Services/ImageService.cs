@@ -31,5 +31,16 @@ namespace Quote.Services
             }
             return null;
         }
+
+        public async Task<List<Image>> GetImgById(int productId)
+        {
+            var list = await _repo.GetAllAsync();
+            if(list != null)
+            {
+                list =list.Where(p => p.ProductId == productId).ToList();
+                return list;
+            }
+            return null;
+        }
     }
 }

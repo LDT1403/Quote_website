@@ -131,5 +131,28 @@ namespace Quote.Services
         {
             await _repo.Save();
         }
+
+        public async Task<List<Product>> GetAllProduct()
+        {
+            var listPro = await _repo.GetAllAsync();
+            if(listPro != null)
+            {
+                listPro = listPro.Where(p => p.IsDelete != true).ToList();
+                return listPro;
+            }
+            return null;
+            
+        }
+
+        public async Task<Product> GetProductById(int id)
+        {
+            var pro = await _repo.GetByIdAsync(id);
+
+             if(pro != null)
+            {
+                return pro;
+            }
+            return null;
+        }
     }
 }
