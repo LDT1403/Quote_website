@@ -209,7 +209,7 @@ namespace Quote.Controllers
         }
 
         
-        [HttpPut("Update_Product")]
+        //[HttpPut("Update_Product")]
 
         //public async Task<IActionResult> UpdateProduct(ProductModal product, int productId)
         //{
@@ -263,33 +263,34 @@ namespace Quote.Controllers
         //                        Description = product.Description,
         //                        ImagePath = GetImageProductPath(pro.ProductId, file.FileName),
 
-                            };
-                            string imagepath = Path.Combine(Filepath, file.FileName);
-                            if (System.IO.File.Exists(imagepath))
-                            {
-                                System.IO.File.Delete(imagepath);
-                            }
-                            using (FileStream stream = System.IO.File.Create(imagepath))
-                            {
-                                await file.CopyToAsync(stream);
-                                passcount++;
-                            }
-                            await _imageService.AddImage(img);
-                            imageCount++;
-                        }
-                        res.Result = "Update Success";
-                    }
-                }
-                        }
-                        catch (Exception ex)
-                        {
-                            errorcount++;
-                            res.Errormessage = ex.Message;
-                        }
-                        res.ResponseCode = 200;
+                //            };
+                //            string imagepath = Path.Combine(Filepath, file.FileName);
+                //            if (System.IO.File.Exists(imagepath))
+                //            {
+                //                System.IO.File.Delete(imagepath);
+                //            }
+                //            using (FileStream stream = System.IO.File.Create(imagepath))
+                //            {
+                //                await file.CopyToAsync(stream);
+                //                passcount++;
+                //            }
+                //            await _imageService.AddImage(img);
+                //            imageCount++;
+                //        }
+                //        res.Result = "Update Success";
+                //    }
+                //}
+                //        }
+                //        catch (Exception ex)
+                //        {
+                //            errorcount++;
+                //            res.Errormessage = ex.Message;
+                //        }
+                //        res.ResponseCode = 200;
 
 
-                        return Ok(res);
-                    }
+                //        return Ok(res);
+                    
                 }  
+
 }
