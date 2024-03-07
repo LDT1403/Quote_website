@@ -36,10 +36,25 @@ namespace Quote.Controllers
                 {
                     return NotFound();
                 }
+                var Imager = new List<Images>();
+                foreach (var img in Imgproduct)
+                {
+                    var imgpush = new Images()
+                    {
+                        Src = img.ImagePath,
+                        Description = img.Description
+                    };
+                    Imager.Add(imgpush);
+                }
+
+
+
+
                 var productWithOptions = new ProductResponse
                 {
                     Product = product,
-                    Options = options
+                    Options = options,
+                    Images = Imager,
                 };
 
                 return Ok(productWithOptions);
@@ -50,6 +65,6 @@ namespace Quote.Controllers
             }
 
         }
-       
+
     }
 }

@@ -81,9 +81,16 @@ namespace Quote.Services
             }
         }
 
-        public Task<List<Models.Image>> GetImageAsync()
+        public async Task<List<Models.Image>> GetImageAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _repoIM.GetAllAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error getting users: " + ex.Message);
+            }
         }
 
         public async Task<Product> DeleteProduct(int id)
