@@ -18,17 +18,16 @@ namespace Quote.Controllers
             _productService = productService;
         }
 
-        [HttpGet("GetCartDetails/{cartId}")]
-        public async Task<IActionResult> GetCartDetails(int cartId)
+        [HttpGet("GetCartDetails")]
+        public async Task<IActionResult> GetCartDetails(int userId)
         {
             try
             {
+                var cart = _cartService.GetCartAsync().Result.SingleOrDefault(c => c.UserId == userId);
                 var cartDetails = await _cartService.GetCartsAsync();
                 var cartDetailsOfCartId = cartDetails
-                    .Where(cd => cd.CartId == cartId).ToList();
-
-                var catrpList = new List<CartResponse>(); // Khởi tạo danh sách cart responses
-
+                    .Where(cd => cd.CartId == cart.CartId).ToList();
+                var catrpList = new List<CartResponse>();
                 foreach (var cd in cartDetailsOfCartId)
                 {
                     var pro = await _productService.GetProductAsync();
@@ -36,17 +35,15 @@ namespace Quote.Controllers
 
                     var img = await _productService.GetImageAsync();
                     var imgdt = img.FirstOrDefault(p => p.ProductId == cd.ProductId);
-
                     var cartpush = new CartResponse()
                     {
                         CartDetailId = cd.CartDetailId,
-                        CartId = cartId,
+                        CartId = cart.CartId,
                         ProductId = (int)cd.ProductId,
-                        ProductName = prodt?.ProductName, // Kiểm tra null trước khi truy cập
-                        ProductThumbnail= imgdt?.Image1?.ToString() // Kiểm tra null trước khi truy cập
+                        ProductName = prodt?.ProductName,
+                        ProductThumbnail = imgdt?.ImagePath?.ToString()
                     };
-
-                    catrpList.Add(cartpush); // Thêm cartpush vào danh sách
+                    catrpList.Add(cartpush);
                 }
 
                 return Ok(catrpList);
@@ -56,7 +53,7 @@ namespace Quote.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Lỗi: {ex.Message}");
             }
         }
-        [HttpPost]
+        [HttpPost("AddToCart")]
         public IActionResult AddToCart(int userId, int productId)
         {
             try
@@ -70,19 +67,26 @@ namespace Quote.Controllers
                     };
                     _cartService.CreateCartOfUser(cart);
                 }
-
+                var checkPro = _cartService.GetCartsAsync().Result.Where(c => c.CartId == cart.CartId).ToList();
+                foreach (var p in checkPro)
+                {
+                    if (p.ProductId == productId)
+                    {
+                        return Ok("Bạn đã thêm sản phẩm này rồi !");
+                    }
+                }
                 // Tạo chi tiết giỏ hàng
                 var cartDetail = new CartDetail { CartId = cart.CartId, ProductId = productId };
                 _cartService.AddCartAsync(cartDetail);
 
-                return Ok("Sản phẩm đã được thêm vào giỏ hàng");
+                return Ok("Sản phẩm đã được thêm vào Yêu Thích");
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Lỗi: {ex.Message}");
             }
         }
-        [HttpDelete("DeleteCartDetail/{cartDetailId}")]
+        [HttpDelete("DeleteCartDetail")]
         public async Task<IActionResult> DeleteCartDetail(int cartDetailId)
         {
             try

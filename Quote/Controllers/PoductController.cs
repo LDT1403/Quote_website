@@ -23,12 +23,13 @@ namespace Quote.Controllers
         {
             public int Idproduct { get; set; }
         }
-        [HttpPost("GetProduct")]
-        public IActionResult GetProduct([FromBody] ProductRequestModel requestModel)
+        [HttpGet("GetProduct")]
+        public IActionResult GetProduct([FromQuery]int Idproduct)
         {
             try
             {
-                var product = _productService.GetProductAsync().Result.SingleOrDefault(p => p.ProductId == requestModel.Idproduct);
+                var product = _productService.GetProductAsync().Result.SingleOrDefault(p => p.ProductId == Idproduct);
+                var category = _productService.GetCategoryAsync().Result.SingleOrDefault(c => c.CategoryId == product.CategoryId);
                 var Imgproduct = _productService.GetImageAsync().Result.Where(i => i.ProductId == product.ProductId).ToList();
                 var options = _productService.GetOptionAsync().Result.Where(o => o.ProductId == product.ProductId).ToList();
 
@@ -36,28 +37,55 @@ namespace Quote.Controllers
                 {
                     return NotFound();
                 }
-                var Imager = new List<Images>();
-                foreach (var img in Imgproduct)
+ 
+                var productWithOptions = new ProductResponse
                 {
-                    var imgpush = new Images()
+                    ProductId = product.ProductId,
+                    ProductName= product.ProductName,
+                    Description= product.Description,
+                    Price= product.Price,
+                    CategoryId= product.CategoryId,
+                    CateName= category.CateName,
+                    Options = options,
+                    Images = Imgproduct,
+                };
+
+                return Ok(productWithOptions);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error: {ex.Message}");
+            }
+
+        }
+        [HttpGet("GetProductCategory")]
+        public IActionResult GetProductCategory([FromQuery] int Idcategory)
+        {
+            try
+            {
+                var product = _productService.GetProductAsync().Result.Where(p => p.CategoryId == Idcategory).ToList();
+                
+
+                if (product == null)
+                {
+                    return NotFound();
+                }
+
+                var productWithCate = new List<ProductCateResponse>();
+                foreach(var cate in product)
+                {
+                    var img = _productService.GetImageAsync().Result.Where(i => i.ProductId == cate.ProductId).FirstOrDefault();
+                    var productCate = new ProductCateResponse
                     {
-                        Src = img.ImagePath,
-                        Description = img.Description
+                        ProductId = cate.ProductId,
+                        ImagePath = img.ImagePath,
                     };
-                    Imager.Add(imgpush);
+                    productWithCate.Add(productCate);
                 }
 
 
 
-
-                var productWithOptions = new ProductResponse
-                {
-                    Product = product,
-                    Options = options,
-                    Images = Imager,
-                };
-
-                return Ok(productWithOptions);
+                return Ok(productWithCate);
             }
             catch (Exception ex)
             {

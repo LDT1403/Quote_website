@@ -74,7 +74,7 @@ namespace Quote.Controllers
                         var img = new Models.Image()
                         {
                             ProductId = id,
-                            Description = product.Description,
+                            Description = image.description,
                             ImagePath = GetImageProductPath(id, fileName),
 
                         };

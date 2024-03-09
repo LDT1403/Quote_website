@@ -28,14 +28,20 @@ namespace Quote.Controllers
             _configuration = configuration;
         }
         
-        [HttpGet]
-       
-        public async Task<IActionResult> GetUser()
+        [HttpGet("UserInfo")]
+        public async Task<IActionResult> GetUser(int userId)
         {
             try
             {
-                var users = await _userService.GetUsersAsync();
-                return Ok(users);
+                var users = await _userService.GetUserIDAsync(userId);
+                var userInfo = new UserInfoModal
+                {
+                    UserName = users.UserName,
+                    Email = users.Email,
+                    Phone = users.Phone,
+                   // Date = (DateTime)users.Dob  
+                };
+                return Ok(userInfo);
             }
             catch (Exception ex)
             {

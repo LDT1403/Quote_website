@@ -73,6 +73,17 @@ namespace Quote.Services
                 throw new Exception("Error getting users: " + ex.Message);
             }
         }
+        public async Task<User> GetUserIDAsync(int userId)
+        {
+            try
+            {
+                return await _repo.GetByIdAsync(userId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error getting users: " + ex.Message);
+            }
+        }
 
         public async Task<User> RegisterAsync(RegisterModal user)
         {
