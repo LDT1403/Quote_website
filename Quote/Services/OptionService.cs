@@ -18,6 +18,21 @@ namespace Quote.Services
             await _repo.AddAsync(opt);
         }
 
+        public async Task<List<Option>> GetOptionById(int productId)
+        {
+            var list = await _repo.GetAllAsync();
+            if(list != null)
+            {
+                 list = list.Where(p=>p.ProductId == productId).ToList();
+                if(list != null)
+                {
+                    return list;
+                }
+            }
+            return null;
+
+        }
+
         public Task<Option> Update(int productId, Options[] option)
         {
             var pro = _repo.GetAllAsync().Result.Where(p=>p.ProductId == productId).FirstOrDefault();

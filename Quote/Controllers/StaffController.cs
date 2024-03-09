@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Azure.Core;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Writers;
@@ -18,14 +19,16 @@ namespace Quote.Controllers
         private readonly IProductService _productService;
         private readonly IOptionService _optionService;
         private readonly IImageService _imageService;
+        private readonly UserInterface _userService;
         private readonly IMapper _mapper;
-        public StaffController(IWebHostEnvironment webHostEnvironment, IProductService productService, IOptionService optionService, IImageService imageService, IMapper mapper)
+        public StaffController(IWebHostEnvironment webHostEnvironment, IProductService productService, IOptionService optionService, IImageService imageService, IMapper mapper, UserInterface userService)
         {
             _webHostEnvironment = webHostEnvironment;
             _productService = productService;
             _optionService = optionService;
             _imageService = imageService;
             _mapper = mapper;
+            _userService = userService;
         }
         public IActionResult Index()
         {
@@ -100,6 +103,51 @@ namespace Quote.Controllers
             return Ok();
         }
 
+        [HttpGet("GetAllProduct")]
+
+        public async Task<IActionResult> GetAllProduct()
+        {
+            try
+            {
+                var allPro = await _productService.GetAllProduct();
+                if (allPro != null)
+                {
+                    return Ok(allPro);
+                }
+                return BadRequest();
+
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("GetProductById/{productId}")]
+        public async Task<IActionResult> GetProductById(int productId)
+        {
+            try
+            {
+                var pro = await _productService.GetProductById(productId);
+                var img = await _imageService.GetImgById(productId);
+                var opt = await _optionService.GetOptionById(productId);
+
+                ResProduct res = new ResProduct();
+
+                if (pro != null && img != null && opt != null)
+                {
+                    res.Product = pro;
+                    res.Images = img;
+                    res.options = opt;
+                    return Ok(res);
+                }
+                return BadRequest();
+
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [NonAction]
         private string GetFilepath(string code)
         {
@@ -154,8 +202,7 @@ namespace Quote.Controllers
                     return Ok(opt);
                 }
                 return BadRequest();
-            }
-            catch (Exception ex)
+            }catch(Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -195,7 +242,11 @@ namespace Quote.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error: {ex.Message}");
             }
 
+
         }
+
+
+        
 
         //[HttpPut("Update_Product")]
 
@@ -251,33 +302,34 @@ namespace Quote.Controllers
         //                        Description = product.Description,
         //                        ImagePath = GetImageProductPath(pro.ProductId, file.FileName),
 
-        //                    };
-        //                    string imagepath = Path.Combine(Filepath, file.FileName);
-        //                    if (System.IO.File.Exists(imagepath))
-        //                    {
-        //                        System.IO.File.Delete(imagepath);
-        //                    }
-        //                    using (FileStream stream = System.IO.File.Create(imagepath))
-        //                    {
-        //                        await file.CopyToAsync(stream);
-        //                        passcount++;
-        //                    }
-        //                    await _imageService.AddImage(img);
-        //                    imageCount++;
-        //                }
-        //                res.Result = "Update Success";
-        //            }
-        //        }
-        //                }
-        //                catch (Exception ex)
-        //                {
-        //                    errorcount++;
-        //                    res.Errormessage = ex.Message;
-        //                }
-        //                res.ResponseCode = 200;
+                //            };
+                //            string imagepath = Path.Combine(Filepath, file.FileName);
+                //            if (System.IO.File.Exists(imagepath))
+                //            {
+                //                System.IO.File.Delete(imagepath);
+                //            }
+                //            using (FileStream stream = System.IO.File.Create(imagepath))
+                //            {
+                //                await file.CopyToAsync(stream);
+                //                passcount++;
+                //            }
+                //            await _imageService.AddImage(img);
+                //            imageCount++;
+                //        }
+                //        res.Result = "Update Success";
+                //    }
+                //}
+                //        }
+                //        catch (Exception ex)
+                //        {
+                //            errorcount++;
+                //            res.Errormessage = ex.Message;
+                //        }
+                //        res.ResponseCode = 200;
 
 
-        //                return Ok(res);
-        //            }
-    }
+                //        return Ok(res);
+                    
+                }  
+
 }

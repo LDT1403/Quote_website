@@ -9,5 +9,7 @@ namespace Quote.Interfaces.ServiceInterface
 
         Task<Option> Update(int productId, Options[] option);
 
+        Task<List<Option>> GetOptionById(int productId);
+
     }
 }
