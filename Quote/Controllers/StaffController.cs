@@ -207,8 +207,47 @@ namespace Quote.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet("GetProductAll")]
+        public IActionResult GetProductAll()
+        {
+            try
+            {
+                var product = _productService.GetProductAsync().Result.ToList();
+
+
+                if (product == null)
+                {
+                    return NotFound();
+                }
+
+                var productWithCate = new List<ProductAllResponse>();
+                foreach (var cate in product)
+                {
+                    var img = _productService.GetImageAsync().Result.Where(i => i.ProductId == cate.ProductId).FirstOrDefault();
+                    var productCate = new ProductAllResponse
+                    {
+                        ProductId = cate.ProductId,
+                        ImagePath = img.ImagePath,
+                        ProductName = cate.ProductName
+                    };
+                    productWithCate.Add(productCate);
+                }
+
+
+
+                return Ok(productWithCate);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error: {ex.Message}");
+            }
+
+
+        }
+
 
         
+
         //[HttpPut("Update_Product")]
 
         //public async Task<IActionResult> UpdateProduct(ProductModal product, int productId)
