@@ -8,7 +8,7 @@ namespace Quote.Interfaces.ServiceInterface
         Task<List<Product>> GetProductAsync();
         Task<List<Image>> GetImageAsync();
         Task<List<Option>> GetOptionAsync();
-
+        Task<List<Category>> GetCategoryAsync();
         Task<Product> DeleteProduct(int id);
 
         System.Threading.Tasks.Task Save();

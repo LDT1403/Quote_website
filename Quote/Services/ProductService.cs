@@ -12,17 +12,20 @@ namespace Quote.Services
         private readonly ProductRepository _repo;
         private readonly OptionRepository _repoOP;
         private readonly ImageRepository _repoIM;
+        private readonly CategoryRepository _repoCategory;
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductService(ProductRepository productRepository, OptionRepository optionRepository, ImageRepository imageRepository, IMapper mapper, IWebHostEnvironment webHostEnvironment)
+public ProductService(ProductRepository repo, OptionRepository repoOP, ImageRepository repoIM, CategoryRepository repoCategory, IMapper mapper, IWebHostEnvironment webHostEnvironment)
         {
-            _repo = productRepository;
-            _repoOP = optionRepository;
-            _repoIM = imageRepository;
+            _repo = repo;
+            _repoOP = repoOP;
+            _repoIM = repoIM;
+            _repoCategory = repoCategory;
             _mapper = mapper;
             _webHostEnvironment = webHostEnvironment;
         }
+
         private string GetFilepath(string code)
         {
             return this._webHostEnvironment.WebRootPath + "\\Upload\\product\\" + code;
@@ -133,7 +136,18 @@ namespace Quote.Services
                 throw new Exception("Error getting users: " + ex.Message);
             }
         }
+        public async Task<List<Category>> GetCategoryAsync()
+        {
 
+            try
+            {
+                return await _repoCategory.GetAllAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error getting users: " + ex.Message);
+            }
+        }
         public async System.Threading.Tasks.Task Save()
         {
             await _repo.Save();

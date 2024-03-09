@@ -65,6 +65,7 @@ builder.Services.AddScoped<OptionRepository>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<CartRepository>();
 builder.Services.AddScoped<CartDetailRepository>();
+builder.Services.AddScoped<CategoryRepository>();
 builder.Services.AddDbContext<DB_SWDContext>();
 builder.Services.AddAutoMapper(typeof(AutoMapperHandler).Assembly);
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
