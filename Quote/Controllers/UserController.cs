@@ -124,7 +124,7 @@ namespace Quote.Controllers
         }
         [HttpPost]
         [Route("logout")]
-        [Authorize]
+     
         public async Task<IActionResult> Logout()
         {
             var userClaims = User.Claims.ToList();
@@ -135,5 +135,39 @@ namespace Quote.Controllers
             }
             return Ok();
         }
+
+        [HttpGet("GetAllStaffById/{id}")]
+
+        public async Task<IActionResult> GetAllStaffById(int id)
+        {
+            try
+            {
+                var list = await _userService.GetStaffById(id);
+
+
+                List<StaffResponse> users = new List<StaffResponse>();
+
+                foreach (var user in list)
+                {
+                    StaffResponse staff =new StaffResponse();
+                     staff.UserName = user.UserName;
+                    staff.UserId = user.UserId;
+                    staff.UserName = user.UserName;
+                    staff.Phone = user.Phone;
+                    staff.Email = user.Email;
+                    staff.Status =user.Status;
+                    staff.Dob = user.Dob;
+                    users.Add(staff);
+                }
+               
+                return Ok(users);
+               
+
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

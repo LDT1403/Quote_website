@@ -32,6 +32,8 @@ namespace Quote.Services
             return null;
         }
 
+      
+
         public async Task<List<Image>> GetImgById(int productId)
         {
             var list = await _repo.GetAllAsync();

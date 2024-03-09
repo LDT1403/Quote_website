@@ -3,6 +3,7 @@ using Azure.Core;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.OpenApi.Writers;
 using Quote.Helper;
 using Quote.Interfaces.ServiceInterface;
@@ -109,12 +110,27 @@ namespace Quote.Controllers
         {
             try
             {
+                
                 var allPro = await _productService.GetAllProduct();
-                if (allPro != null)
+
+                List<ProductRes> res = new List<ProductRes>();
+
+                foreach(var product in allPro)
                 {
-                    return Ok(allPro);
+                    var img = await _imageService.GetAllImage();
+
+                    var productRes = new ProductRes();
+
+                    productRes.productId = product.ProductId;
+                    productRes.productName = product.ProductName;
+                    //productRes.thumbnail = img.ImagePath;
+
+                    res.Add(productRes);
                 }
-                return BadRequest();
+               
+                 return Ok(res);
+                
+                
 
             } catch (Exception ex)
             {

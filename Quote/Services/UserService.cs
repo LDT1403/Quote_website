@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Quote.Interfaces.ServiceInterface;
 using Quote.Modal;
 using Quote.Models;
@@ -20,6 +21,25 @@ namespace Quote.Services
             _mapper = mapper;
         }
 
+        public async Task<List<User>> GetStaffById(int staffid)
+        {
+            try
+            {
+                var list = await _repo.GetAllAsync();
+
+                if(list != null) {
+                    list = list.Where(p => p.ManagerId == staffid).ToList();
+                    return list;
+                }
+                return null;
+
+            }catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        [HttpGet(" GetStaffByStatus/{id}")]
         public async Task<List<User>> GetStaffByStatus(int staffid)
         {
             try
