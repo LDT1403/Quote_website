@@ -2,31 +2,20 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace Quote.Models;
 
-[Table("Image")]
 public partial class Image
 {
-    [Key]
     public int ImageId { get; set; }
 
-    [Column("Image")]
-    [MaxLength(50)]
     public byte[] Image1 { get; set; }
 
     public int? ProductId { get; set; }
 
-    [Column(TypeName = "ntext")]
     public string Description { get; set; }
 
-    [StringLength(500)]
     public string ImagePath { get; set; }
 
-    [ForeignKey("ProductId")]
-    [InverseProperty("Images")]
     public virtual Product Product { get; set; }
 }

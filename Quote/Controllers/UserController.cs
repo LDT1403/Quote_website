@@ -177,6 +177,36 @@ namespace Quote.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet("GetAllStaffByStatus/{id}")]
+        public async Task<IActionResult> GetAllStaffByStatus(int id)
+        {
+            try
+            {
+                var list = await _userService.GetStaffByStatus(id);
+
+                List<StaffResponse> users = new List<StaffResponse>();
+
+                foreach (var user in list)
+                {
+                    StaffResponse staff = new StaffResponse();
+                    staff.UserName = user.UserName;
+                    staff.UserId = user.UserId;
+                    staff.UserName = user.UserName;
+                    staff.Phone = user.Phone;
+                    staff.Email = user.Email;
+                    staff.Status = user.Status;
+                    staff.Dob = user.Dob;
+                    users.Add(staff);
+                }
+
+                return Ok(users);
+
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
     }
 }

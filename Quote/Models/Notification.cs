@@ -2,23 +2,16 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace Quote.Models;
 
-[Table("Notification")]
 public partial class Notification
 {
-    [Key]
     public int NotiId { get; set; }
 
     public int? UserId { get; set; }
 
-    [StringLength(500)]
     public string Script { get; set; }
 
-    [Column(TypeName = "datetime")]
     public DateTime? Time { get; set; }
 }

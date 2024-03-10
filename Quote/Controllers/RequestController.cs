@@ -31,32 +31,41 @@ namespace Quote.Controllers
                 ProductId = requestdata.ProductId,
                 Status = requestdata.Status,
                 UserId = userId,
-                //Phone = requestdata.Phone,
+                Phone = requestdata.Phone,
             };
             var requestItem = await _requestService.CreateRequestUser(request);
             return Ok("Success");
         }
-        [HttpPost("CreateContract")]
-        public async Task<ActionResult<Request>> CreateContract([FromForm] CreateContractModel Contractdata)
+
+        [HttpGet("GetAllRequest")]
+        public async Task<ActionResult> GetAllRequest()
         {
-            //if (userId == null)
-            //{
-            //    return Unauthorized();
-            //}
-            var contract = new Contract
+            try
             {
-               RequestId = Contractdata.RequestId,
-               ConPrice = Contractdata.ConPrice,
-               FinalPrice = Contractdata.FinalPrice,
-              // Status = Contractdata.Status,
-              //ContractFile =Contractdata.ContractFile,
-              //Phone = requestdata.Phone,
-            };
-            await _requestService.CreateContractUser(contract);
-            return Ok("Success");
+                var list = await _requestService.GetAllRequest();
+                return Ok(list);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }                             
         }
-
-
-
+        [HttpPut("ConfirmAppointment/{requestId}")]
+        public async Task<ActionResult> ConfirmAppointment(int requestId)
+        {
+            try
+            {
+                var re = await _requestService.Appoinment(requestId);
+                if(re == null)
+                {
+                    return NotFound();
+                }
+                return Ok(re);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

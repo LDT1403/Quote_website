@@ -2,25 +2,16 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace Quote.Models;
 
-[Table("Cart")]
-[Index("UserId", Name = "UQ__Cart__1788CC4D074D1412", IsUnique = true)]
 public partial class Cart
 {
-    [Key]
     public int CartId { get; set; }
 
     public int UserId { get; set; }
 
-    [InverseProperty("Cart")]
     public virtual ICollection<CartDetail> CartDetails { get; set; } = new List<CartDetail>();
 
-    [ForeignKey("UserId")]
-    [InverseProperty("Cart")]
     public virtual User User { get; set; }
 }

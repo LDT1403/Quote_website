@@ -2,31 +2,24 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace Quote.Models;
 
-[Table("Contract")]
-[Index("RequestId", Name = "UQ__Contract__33A8517B5AFD399E", IsUnique = true)]
 public partial class Contract
 {
-    [Key]
     public int ContractId { get; set; }
 
     public int? RequestId { get; set; }
 
-    [StringLength(50)]
     public string FinalPrice { get; set; }
 
-    [StringLength(50)]
     public string ConPrice { get; set; }
 
-    [InverseProperty("Contract")]
+    public string ContractFile { get; set; }
+
+    public string Status { get; set; }
+
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
-    [ForeignKey("RequestId")]
-    [InverseProperty("Contract")]
     public virtual Request Request { get; set; }
 }

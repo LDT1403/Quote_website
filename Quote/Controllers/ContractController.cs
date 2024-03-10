@@ -41,9 +41,7 @@ namespace Quote.Controllers
                 RequestId = Contractdata.RequestId,
                 ConPrice = Contractdata.ConPrice,
                 FinalPrice = Contractdata.FinalPrice,
-                // Status = Contractdata.Status,
-                //ContractFile =Contractdata.ContractFile,
-                //Phone = requestdata.Phone,
+                Status = Contractdata.Status,                          
             };
 
             var contractres = await _requestService.CreateContractUser(contract);
@@ -64,7 +62,7 @@ namespace Quote.Controllers
                 await Contractdata.ContractFile.CopyToAsync(stream);
                 string docxFile = GetContractPath(contractres.ContractId, fileName);
 
-                //contractres.ContractFile = contractres;
+                contractres.ContractFile = docxFile;
                 var contdata =  await _requestService.UpdateContractUser(contractres);
                 return Ok(docxFile);
             }

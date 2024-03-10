@@ -2,44 +2,32 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace Quote.Models;
 
-[Table("Request")]
 public partial class Request
 {
-    [Key]
     public int RequestId { get; set; }
 
-    public bool? Status { get; set; }
+    public string Status { get; set; }
 
-    [Column(TypeName = "date")]
     public DateTime? Date { get; set; }
 
-    [StringLength(500)]
     public string Address { get; set; }
 
-    [StringLength(250)]
     public string Email { get; set; }
 
     public int? UserId { get; set; }
 
     public int? ProductId { get; set; }
 
-    [InverseProperty("Request")]
+    public string Phone { get; set; }
+
     public virtual Contract Contract { get; set; }
 
-    [ForeignKey("ProductId")]
-    [InverseProperty("Requests")]
     public virtual Product Product { get; set; }
 
-    [InverseProperty("Request")]
     public virtual Task Task { get; set; }
 
-    [ForeignKey("UserId")]
-    [InverseProperty("Requests")]
     public virtual User User { get; set; }
 }
