@@ -1,6 +1,8 @@
-﻿namespace Quote.Repositorys
+﻿using Quote.Models;
+
+namespace Quote.Repositorys
 {
-    public class ContractRepository
+    public class ContractRepository : RepoBase<Contract>
     {
     }
 }

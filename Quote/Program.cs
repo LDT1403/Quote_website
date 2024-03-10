@@ -68,6 +68,13 @@ builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<CartRepository>();
 builder.Services.AddScoped<CartDetailRepository>();
 builder.Services.AddScoped<CategoryRepository>();
+builder.Services.AddScoped<IRequestService, RequestService>();
+//builder.Services.AddScoped<IVnPayService, VnPayService>();
+
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<ContractRepository>();
+builder.Services.AddScoped<RequestRepository>();
+builder.Services.AddScoped<PaymentRepository>();
 builder.Services.AddDbContext<DB_SWDContext>();
 builder.Services.AddAutoMapper(typeof(AutoMapperHandler).Assembly);
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
