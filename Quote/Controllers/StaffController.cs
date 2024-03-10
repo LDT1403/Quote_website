@@ -110,13 +110,23 @@ namespace Quote.Controllers
             try
             {
                 var allPro = await _productService.GetAllProduct();
-                if (allPro != null)
+                
+                var productWithCate = new List<ProductAllResponse>();
+                foreach (var cate in allPro)
                 {
-                    return Ok(allPro);
+                    var img = _productService.GetImageAsync().Result.Where(i => i.ProductId == cate.ProductId).FirstOrDefault();
+                    var productCate = new ProductAllResponse
+                    {
+                        ProductId = cate.ProductId,
+                        ImagePath = img.ImagePath,
+                        ProductName = cate.ProductName
+                    };
+                    productWithCate.Add(productCate);
                 }
-                return BadRequest();
+                return Ok(productWithCate);
 
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -207,8 +217,47 @@ namespace Quote.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet("GetProductAll")]
+        public IActionResult GetProductAll()
+        {
+            try
+            {
+                var product = _productService.GetProductAsync().Result.ToList();
+
+
+                if (product == null)
+                {
+                    return NotFound();
+                }
+
+                var productWithCate = new List<ProductAllResponse>();
+                foreach (var cate in product)
+                {
+                    var img = _productService.GetImageAsync().Result.Where(i => i.ProductId == cate.ProductId).FirstOrDefault();
+                    var productCate = new ProductAllResponse
+                    {
+                        ProductId = cate.ProductId,
+                        ImagePath = img.ImagePath,
+                        ProductName = cate.ProductName
+                    };
+                    productWithCate.Add(productCate);
+                }
+
+
+
+                return Ok(productWithCate);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error: {ex.Message}");
+            }
+
+
+        }
+
 
         
+
         //[HttpPut("Update_Product")]
 
         //public async Task<IActionResult> UpdateProduct(ProductModal product, int productId)

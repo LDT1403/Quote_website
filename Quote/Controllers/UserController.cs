@@ -39,6 +39,8 @@ namespace Quote.Controllers
                     UserName = users.UserName,
                     Email = users.Email,
                     Phone = users.Phone,
+                    Position = users.Position,
+                    //Images = users.Image,
                    // Date = (DateTime)users.Dob  
                 };
                 return Ok(userInfo);
@@ -89,6 +91,7 @@ namespace Quote.Controllers
                 new Claim("Id", user.UserId.ToString()),
                 new Claim("Email", user.Email),
                 new Claim("UserName" ,user.UserName),
+                new Claim("Role" ,user.Role),
                 new Claim(ClaimTypes.Role ,user.Role),
             };
 
