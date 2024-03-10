@@ -8,7 +8,7 @@ namespace Quote.Interfaces.ServiceInterface
         Task<Request> UpdateRequestUser(Request request);
         Task<Request> CreateRequestUser(Request request);
         Task<Contract> CreateContractUser(Contract contract);
-        Task<Contract> UpdateContractUser(int contractId);
+        Task<Contract> UpdateContractUser(Contract contract);
     }
 
 }
