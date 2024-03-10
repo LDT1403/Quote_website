@@ -29,6 +29,7 @@ namespace Quote.Controllers
                 Address = requestdata.Address,
                 Email = requestdata.Email,
                 ProductId = requestdata.ProductId,
+                Date = DateTime.Now,
                 Status = requestdata.Status,
                 UserId = userId,
                 Phone = requestdata.Phone,
