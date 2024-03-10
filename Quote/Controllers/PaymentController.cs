@@ -39,8 +39,8 @@ namespace Quote.Controllers
             {
                 return Redirect(_configuration["Payment:Failed"]);
             }
-            var payment = await _paymentService.GetPayContract(paymentId);
-            await _requestService.UpdateContractUser((int)payment.ContractId);
+            //var payment = await _paymentService.GetPayContract(paymentId);
+            //await _requestService.UpdateContractUser((int)payment.ContractId);
 
             return Redirect(_configuration["Payment:SuccessUrl"]);
 

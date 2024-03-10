@@ -36,7 +36,7 @@ namespace Quote.Services
             }
         }
 
-        public  async Task<Models.Request> CreateRequestUser(Models.Request request)
+        public async Task<Models.Request> CreateRequestUser(Models.Request request)
         {
             try
             {
@@ -50,14 +50,17 @@ namespace Quote.Services
             }
         }
 
-        public async Task<Models.Contract> UpdateContractUser(int contractId)
+        public async Task<Models.Contract> UpdateContractUser(Models.Contract contract)
         {
             try
             {
-                var contract = _repoCt.GetAllAsync().Result.Where(c => c.ContractId == contractId).FirstOrDefault();
-                //contract.status = true;
-                await _repoCt.UpdateAsync(contract);
-                return contract;
+
+                var contractrt = await _repoCt.UpdateAsync(contract);
+                if (contractrt != null)
+                {
+                    return contractrt;
+                }
+                return null;
             }
             catch (Exception ex)
             {

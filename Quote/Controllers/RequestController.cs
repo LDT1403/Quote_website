@@ -7,11 +7,11 @@ namespace Quote.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class RequestContractController : ControllerBase
+    public class RequestController : ControllerBase
     {
         private readonly IRequestService _requestService;
 
-        public RequestContractController(IRequestService requestService)
+        public RequestController(IRequestService requestService)
         {
             _requestService = requestService;
         }
@@ -34,6 +34,25 @@ namespace Quote.Controllers
                 //Phone = requestdata.Phone,
             };
             var requestItem = await _requestService.CreateRequestUser(request);
+            return Ok("Success");
+        }
+        [HttpPost("CreateContract")]
+        public async Task<ActionResult<Request>> CreateContract([FromForm] CreateContractModel Contractdata)
+        {
+            //if (userId == null)
+            //{
+            //    return Unauthorized();
+            //}
+            var contract = new Contract
+            {
+               RequestId = Contractdata.RequestId,
+               ConPrice = Contractdata.ConPrice,
+               FinalPrice = Contractdata.FinalPrice,
+              // Status = Contractdata.Status,
+              //ContractFile =Contractdata.ContractFile,
+              //Phone = requestdata.Phone,
+            };
+            await _requestService.CreateContractUser(contract);
             return Ok("Success");
         }
 
