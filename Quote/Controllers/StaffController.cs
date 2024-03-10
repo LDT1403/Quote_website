@@ -110,13 +110,23 @@ namespace Quote.Controllers
             try
             {
                 var allPro = await _productService.GetAllProduct();
-                if (allPro != null)
+                
+                var productWithCate = new List<ProductAllResponse>();
+                foreach (var cate in allPro)
                 {
-                    return Ok(allPro);
+                    var img = _productService.GetImageAsync().Result.Where(i => i.ProductId == cate.ProductId).FirstOrDefault();
+                    var productCate = new ProductAllResponse
+                    {
+                        ProductId = cate.ProductId,
+                        ImagePath = img.ImagePath,
+                        ProductName = cate.ProductName
+                    };
+                    productWithCate.Add(productCate);
                 }
-                return BadRequest();
+                return Ok(productWithCate);
 
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

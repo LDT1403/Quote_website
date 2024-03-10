@@ -13,6 +13,10 @@
         public string UserName { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
+
+        public string Images { get; set; }
+
+        public string Position { get; set; }
         //public DateTime? Date { get; set; }
     }
 }

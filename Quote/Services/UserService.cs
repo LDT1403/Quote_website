@@ -39,7 +39,7 @@ namespace Quote.Services
             }
         }
 
-        [HttpGet(" GetStaffByStatus/{id}")]
+        
         public async Task<List<User>> GetStaffByStatus(int staffid)
         {
             try
