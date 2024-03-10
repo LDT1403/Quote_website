@@ -171,23 +171,6 @@ namespace Quote.Controllers
 
         }
 
-        [HttpPost("AddOptions/{productID}")]
-        public async Task<IActionResult> AddOptions([FromBody] Options[] options, int productID)
-        {
-            int count = 0;
-            foreach (var opt in options)
-            {
-                var newOpt = new Option()
-                {
-                    ProductId = productID,
-                    OptionName = opt.OptionName,
-                    Quantity = int.Parse(opt.OptionQuantity),
-                };
-                await _optionService.AddOptions(newOpt);
-                count++;
-            }
-            return Ok(count);
-        }
         [HttpDelete("Delete_Product")]
         public async Task<IActionResult> DeleteProduct(int productId)
         {
@@ -200,63 +183,6 @@ namespace Quote.Controllers
             else { return BadRequest(); }
 
         }
-
-        [HttpPut("Update_Options/{productId}")]
-        public async Task<IActionResult> Update_Option(int productId, [FromBody] Options[] options)
-        {
-            try
-            {
-                var opt = await _optionService.Update(productId, options);
-                if (opt != null)
-                {
-                    return Ok(opt);
-                }
-                return BadRequest();
-            }catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-        [HttpGet("GetProductAll")]
-        public IActionResult GetProductAll()
-        {
-            try
-            {
-                var product = _productService.GetProductAsync().Result.ToList();
-
-
-                if (product == null)
-                {
-                    return NotFound();
-                }
-
-                var productWithCate = new List<ProductAllResponse>();
-                foreach (var cate in product)
-                {
-                    var img = _productService.GetImageAsync().Result.Where(i => i.ProductId == cate.ProductId).FirstOrDefault();
-                    var productCate = new ProductAllResponse
-                    {
-                        ProductId = cate.ProductId,
-                        ImagePath = img.ImagePath,
-                        ProductName = cate.ProductName
-                    };
-                    productWithCate.Add(productCate);
-                }
-
-
-
-                return Ok(productWithCate);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Error: {ex.Message}");
-            }
-
-
-        }
-
-
-        
 
         //[HttpPut("Update_Product")]
 
