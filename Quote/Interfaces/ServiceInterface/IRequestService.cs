@@ -6,9 +6,13 @@ namespace Quote.Interfaces.ServiceInterface
     public interface IRequestService
     {
         Task<Request> UpdateRequestUser(Request request);
+
+        Task<List<Request>> GetAllRequest();
         Task<Request> CreateRequestUser(Request request);
         Task<Contract> CreateContractUser(Contract contract);
-        Task<Contract> UpdateContractUser(int contractId);
+
+        Task<Request> Appoinment(int requestid);
+        Task<Contract> UpdateContractUser(Contract contract);
     }
 
 }

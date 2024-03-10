@@ -10,7 +10,7 @@ namespace Quote.Modal
     
         public string UserName { get; set; }
              
-        public bool? Status { get; set; }
+        public string? Status { get; set; }
     
         public string Phone { get; set; }
 

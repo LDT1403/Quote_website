@@ -48,7 +48,7 @@ namespace Quote.Services
 
                 if(list != null)
                 {
-                    list = list.Where(p=> p.ManagerId == staffid && p.Status == true).ToList();
+                    list = list.Where(p=> p.ManagerId == staffid && p.Status == "0").ToList();
                     return list;
                 }
                 else

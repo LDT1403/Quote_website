@@ -2,27 +2,18 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace Quote.Models;
 
-[Table("CartDetail")]
 public partial class CartDetail
 {
-    [Key]
     public int CartDetailId { get; set; }
 
     public int? CartId { get; set; }
 
     public int? ProductId { get; set; }
 
-    [ForeignKey("CartId")]
-    [InverseProperty("CartDetails")]
     public virtual Cart Cart { get; set; }
 
-    [ForeignKey("ProductId")]
-    [InverseProperty("CartDetails")]
     public virtual Product Product { get; set; }
 }

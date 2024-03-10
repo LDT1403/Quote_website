@@ -2,45 +2,30 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace Quote.Models;
 
-[Table("Product")]
 public partial class Product
 {
-    [Key]
     public int ProductId { get; set; }
 
     public int? CategoryId { get; set; }
 
-    [StringLength(500)]
     public string ProductName { get; set; }
 
-    [StringLength(50)]
     public string Price { get; set; }
 
-    [Column(TypeName = "ntext")]
     public string Description { get; set; }
 
-    [Column("isDelete")]
     public bool? IsDelete { get; set; }
 
-    [InverseProperty("Product")]
     public virtual ICollection<CartDetail> CartDetails { get; set; } = new List<CartDetail>();
 
-    [ForeignKey("CategoryId")]
-    [InverseProperty("Products")]
     public virtual Category Category { get; set; }
 
-    [InverseProperty("Product")]
     public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 
-    [InverseProperty("Product")]
     public virtual ICollection<Option> Options { get; set; } = new List<Option>();
 
-    [InverseProperty("Product")]
     public virtual ICollection<Request> Requests { get; set; } = new List<Request>();
 }

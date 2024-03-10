@@ -2,16 +2,11 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace Quote.Models;
 
-[Table("RequestDetail")]
 public partial class RequestDetail
 {
-    [Key]
     public int RequestDetailId { get; set; }
 
     public int? RequestId { get; set; }

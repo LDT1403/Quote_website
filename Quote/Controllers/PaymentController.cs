@@ -24,10 +24,10 @@ namespace Quote.Controllers
             _requestService = requestService;
         }
         [HttpPost("Pay")]
-        [Authorize]
-        public async Task<ActionResult<PaymentResponse>> CreatePayment([FromBody] PayRequestModel request)
+        //[Authorize]
+        public async Task<ActionResult<PaymentResponse>> CreatePayment([FromBody] PayRequestModel request,int userId)
         {
-            var response = await _paymentService.PayContract(request.ContractId, request.Method);
+            var response = await _paymentService.PayContract(request.ContractId, request.Method , userId);
             return Ok(response);
         }
 
@@ -39,8 +39,8 @@ namespace Quote.Controllers
             {
                 return Redirect(_configuration["Payment:Failed"]);
             }
-            var payment = await _paymentService.GetPayContract(paymentId);
-            await _requestService.UpdateContractUser((int)payment.ContractId);
+            //var payment = await _paymentService.GetPayContract(paymentId);
+            //await _requestService.UpdateContractUser((int)payment.ContractId);
 
             return Redirect(_configuration["Payment:SuccessUrl"]);
 

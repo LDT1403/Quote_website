@@ -12,6 +12,13 @@ namespace Quote.Services
         private readonly ContractRepository _repoCont;
         private readonly IVnPayService _serviceVnPay;
 
+        public PaymentService(PaymentRepository repoPay, ContractRepository repoCont, IVnPayService vnPayService )
+        {
+            _repoPay = repoPay;
+            _repoCont = repoCont;
+            _serviceVnPay = vnPayService;
+        }
+    
         public async Task<Payment> GetPayContract(int PaymentId)
         {
             try
@@ -25,17 +32,17 @@ namespace Quote.Services
             }
         }
 
-        public async Task<PaymentResponse> PayContract(int ContractId, string method)
+        public async Task<PaymentResponse> PayContract(int ContractId, string method,int userId)
         {
-            var contract = await _repoCont.GetByIdAsync(ContractId);
-            var pricePay = (int.Parse(contract.FinalPrice) + int.Parse(contract.ConPrice)) * 0.3;
+            var contract = await _repoCont.GetByIdAsync((int)ContractId);
+            var pricePay = ((int.Parse(contract.FinalPrice)) + (int.Parse(contract.ConPrice))) * 30/100;
             var paymentdata = new Payment()
             {
                 ContractId = contract.ContractId,
                 Method = method,
                 DatePay = DateTime.Now,
                 PricePay = pricePay.ToString(),
-                UserId = contract.Request.UserId,
+                UserId = userId,
             };
             var payment = await _repoPay.AddReturnAsync(paymentdata);
             var paymentUrl = _serviceVnPay.CreatePaymentUrl(payment);

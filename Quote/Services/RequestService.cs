@@ -23,6 +23,26 @@ namespace Quote.Services
             _webHostEnvironment = webHostEnvironment;
         }
 
+        public async Task<Models.Request> Appoinment(int requestid)
+        {
+            try
+            {
+                var req = await _repo.GetByIdAsync(requestid);
+                if (req != null)
+                {
+                    req.Status = "2";
+                    var pro = await _repo.UpdateAsync(req);
+                    return pro;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error: " + ex.Message);
+            }
+
+        }
+
         public async Task<Models.Contract> CreateContractUser(Models.Contract contract)
         {
             try
@@ -36,7 +56,7 @@ namespace Quote.Services
             }
         }
 
-        public  async Task<Models.Request> CreateRequestUser(Models.Request request)
+        public async Task<Models.Request> CreateRequestUser(Models.Request request)
         {
             try
             {
@@ -50,14 +70,28 @@ namespace Quote.Services
             }
         }
 
-        public async Task<Models.Contract> UpdateContractUser(int contractId)
+        public async Task<List<Models.Request>> GetAllRequest()
+        {
+            var list = await _repo.GetAllAsync();
+            if(list != null)
+            {
+                
+                return list;
+            }
+            return null;
+        }
+
+        public async Task<Models.Contract> UpdateContractUser(Models.Contract contract)
         {
             try
             {
-                var contract = _repoCt.GetAllAsync().Result.Where(c => c.ContractId == contractId).FirstOrDefault();
-                //contract.status = true;
-                await _repoCt.UpdateAsync(contract);
-                return contract;
+
+                var contractrt = await _repoCt.UpdateAsync(contract);
+                if (contractrt != null)
+                {
+                    return contractrt;
+                }
+                return null;
             }
             catch (Exception ex)
             {
