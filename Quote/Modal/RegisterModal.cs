@@ -17,6 +17,6 @@
         public string Images { get; set; }
 
         public string Position { get; set; }
-        //public DateTime? Date { get; set; }
+        public string? Date { get; set; }
     }
 }
