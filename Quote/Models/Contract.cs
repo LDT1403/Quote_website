@@ -19,6 +19,8 @@ public partial class Contract
 
     public string Status { get; set; }
 
+    public DateTime? Date { get; set; }
+
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
     public virtual Request Request { get; set; }

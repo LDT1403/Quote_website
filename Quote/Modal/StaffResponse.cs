@@ -19,7 +19,7 @@ namespace Quote.Modal
  
         public byte[] Image { get; set; }
     
-        public DateTime? Dob { get; set; }
+        public string? Dob { get; set; }
 
         public string Position { get; set; }
    

@@ -21,7 +21,7 @@ public partial class User
 
     public string Image { get; set; }
 
-    public DateTime? Dob { get; set; }
+    public string Dob { get; set; }
 
     public int? ManagerId { get; set; }
 

@@ -100,6 +100,7 @@ public partial class DB_SWDContext : DbContext
 
             entity.Property(e => e.ConPrice).HasMaxLength(50);
             entity.Property(e => e.ContractFile).HasMaxLength(500);
+            entity.Property(e => e.Date).HasColumnType("date");
             entity.Property(e => e.FinalPrice).HasMaxLength(50);
             entity.Property(e => e.Status).HasMaxLength(500);
 
@@ -186,6 +187,7 @@ public partial class DB_SWDContext : DbContext
             entity.Property(e => e.Email).HasMaxLength(250);
             entity.Property(e => e.Phone).HasMaxLength(250);
             entity.Property(e => e.Status).HasMaxLength(500);
+            entity.Property(e => e.UserName).HasMaxLength(500);
 
             entity.HasOne(d => d.Product).WithMany(p => p.Requests)
                 .HasForeignKey(d => d.ProductId)
@@ -242,7 +244,7 @@ public partial class DB_SWDContext : DbContext
         {
             entity.HasIndex(e => e.UserId, "UQ__Users__1788CC4D62F95C3A").IsUnique();
 
-            entity.Property(e => e.Dob).HasColumnType("date");
+            entity.Property(e => e.Dob).HasMaxLength(250);
             entity.Property(e => e.Email).HasMaxLength(250);
             entity.Property(e => e.Image).HasColumnType("ntext");
             entity.Property(e => e.Password).HasMaxLength(250);

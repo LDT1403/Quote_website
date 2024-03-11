@@ -23,6 +23,8 @@ public partial class Request
 
     public string Phone { get; set; }
 
+    public string UserName { get; set; }
+
     public virtual Contract Contract { get; set; }
 
     public virtual Product Product { get; set; }
