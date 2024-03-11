@@ -17,10 +17,10 @@ namespace Quote.Controllers
         }
 
         [HttpPost("CreateRequest")]
-        public async Task<ActionResult<Request>> CreateRequest([FromBody] CreateRequestModel requestdata, int userId)
+        public async Task<ActionResult<Request>> CreateRequest([FromBody] CreateRequestModel requestdata)
         {
            
-            if (userId == null)
+            if (requestdata.UserId == null)
             {
                 return Unauthorized();
             }
@@ -29,10 +29,11 @@ namespace Quote.Controllers
                 Address = requestdata.Address,
                 Email = requestdata.Email,
                 ProductId = requestdata.ProductId,
-                Date = DateTime.Now,
+                Date = DateTime.Parse(requestdata.Date),
                 Status = requestdata.Status,
-                UserId = userId,
+                UserId = requestdata.UserId,
                 Phone = requestdata.Phone,
+                UserName = requestdata.UserName,
             };
             var requestItem = await _requestService.CreateRequestUser(request);
             return Ok("Success");

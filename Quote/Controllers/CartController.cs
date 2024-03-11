@@ -53,6 +53,11 @@ namespace Quote.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Lỗi: {ex.Message}");
             }
         }
+        [HttpGet("LoadAdd")]
+        public async Task<IActionResult> LoadAdd()
+        {
+            return Ok();
+        }
         [HttpPost("AddToCart")]
         public IActionResult AddToCart(int userId, int productId)
         {
