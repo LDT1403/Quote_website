@@ -40,8 +40,8 @@ namespace Quote.Controllers
                     Email = users.Email,
                     Phone = users.Phone,
                     Position = users.Position,
-                    //Images = users.Image,
-                   // Date = (DateTime)users.Dob  
+                    Images = users.Image,
+                    Date = users.Dob  
                 };
                 return Ok(userInfo);
             }
@@ -51,6 +51,7 @@ namespace Quote.Controllers
             }
         }
 
+     
 
         [AllowAnonymous]
         [HttpPost("login")]
