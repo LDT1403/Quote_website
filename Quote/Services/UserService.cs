@@ -119,5 +119,27 @@ namespace Quote.Services
                 throw new Exception("Error registering user: " + ex.Message);
             }
         }
+
+        public async Task<User> RegisterStaffAsync(User user)
+        {
+            try
+            {
+                if (await _repo.IsEmailExists(user.Email))
+                {
+                    return null;
+                }
+                else
+                {
+                    user.Role = "ST";
+
+                    await _repo.AddAsync(user);
+                    return user;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error registering user: " + ex.Message);
+            }
+        }
     }
 }
