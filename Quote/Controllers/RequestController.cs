@@ -50,7 +50,7 @@ private readonly IMailService _mailService;
                 UserName = requestdata.UserName,
             };
             var requestItem = await _requestService.CreateRequestUser(request);
-            var productItem = await _productService.GetProductById( (int)requestItem.ProductId);
+            var productItem = await _productService.GetProductId( (int)requestItem.ProductId);
             var toEmail = requestItem.Email;
 
             var emailBody = $@"<div><h3>HỆ THỐNG ĐANG SẮP XẾP NHÂN VIÊN KHẢO SÁT</h3> 
@@ -378,7 +378,7 @@ private readonly IMailService _mailService;
                     newTask.UserId = staffId;
                     newTask.Status = "0";
                     newTask.Location = request.Address;
-                    var item = await _taskService.CreateTasks(newTask);
+                    var item = await _taskInterface.CreateTasks(newTask);
                     return Ok("Success");
                               
             }
