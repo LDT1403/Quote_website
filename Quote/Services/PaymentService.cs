@@ -61,7 +61,7 @@ namespace Quote.Services
 
         public async System.Threading.Tasks.Task UpdatePay(Payment payment)
         {
-            payment.Status = "success";
+            
             await _repoPay.UpdateAsync(payment);            
         }
     }
