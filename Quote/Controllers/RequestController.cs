@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Ocsp;
 using Quote.Interfaces.ServiceInterface;
+using Quote.Modal;
 using Quote.Modal.request;
 using Quote.Models;
+using Quote.Services;
+using System.Threading.Tasks;
 
 namespace Quote.Controllers
 {
@@ -11,6 +14,7 @@ namespace Quote.Controllers
     public class RequestController : ControllerBase
     {
         private readonly IRequestService _requestService;
+         private readonly ITaskInterface _taskService;
         private readonly IMailService _mailService;
         private readonly IProductService _productService;
         private readonly UserInterface userInterface;
@@ -20,6 +24,9 @@ namespace Quote.Controllers
             _mailService = mailService;
             _productService = productService;
             this.userInterface = userInterface;
+             _taskService = taskService;
+
+    
         }
 
         [HttpPost("CreateRequest")]
@@ -83,18 +90,25 @@ namespace Quote.Controllers
                 return BadRequest(ex.Message);
             }                             
         }
-        [HttpPut("ConfirmAppointment/{requestId}")]
-        public async Task<ActionResult> ConfirmAppointment(int requestId)
+        [HttpPost("ConfirmAppointment")]
+        public async Task<ActionResult> ConfirmAppointment(int requestId, int staffId)
         {
             try
             {
-                var re = await _requestService.Appoinment(requestId);
-                if(re == null)
+                var request = await _requestService.Appoinment(requestId);
+                if(request == null)
                 {
                     return NotFound();
-                }
-                
-                return Ok(re);
+
+                }            
+                    Models.Task newTask = new Models.Task();
+                    newTask.RequestId = request.RequestId; ;
+                    newTask.UserId = staffId;
+                    newTask.Status = "0";
+                    newTask.Location = request.Address;
+                    var item = await _taskService.CreateTasks(newTask);
+                    return Ok("Success");
+                              
             }
             catch (Exception ex)
             {
