@@ -33,31 +33,24 @@ namespace Quote.Controllers
             }
         }
 
-        //[HttpPost("CreateTask")]
-        //public async Task<IActionResult> CreateTask(int requestId, int staffId, [FromBody]TaskReq task)
-        //{
-        //    try
-        //    {
-        //        var request = await _requestService.Appoinment(requestId);
+        [HttpGet("AllTaskByStaffId")]
+        public async Task<IActionResult> GetAllTaskByStaffId(int staffId)
+        {
+            try
+            {
+                var tasks= await _taskService.GetTasks();
+                var taskStaff = tasks.Where(t => t.UserId == staffId).ToList();
                 
-        //        if(request != null)
-        //        {
-        //            Models.Task newTask = new Models.Task();
-        //            newTask.RequestId = request.RequestId; ;
-        //            newTask.UserId = staffId;
-        //            newTask.TaskName = task.TaskName;
-        //            newTask.Status = "0";
-        //            newTask.Location = request.Address;
-        //            var item = await _taskService.CreateTasks(newTask);
-        //            return Ok("Success");
-        //        }
-        //        return NotFound();
-              
+                
+                return Ok(tasks);
 
-        //    }catch (Exception ex)
-        //    {
-        //        return BadRequest($"{ex.Message}");
-        //    }
-        //}
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"{ex.Message}");
+            }
+        }
+
     }
 }

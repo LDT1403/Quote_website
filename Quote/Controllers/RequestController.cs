@@ -418,5 +418,7 @@ namespace Quote.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+
     }
 }
