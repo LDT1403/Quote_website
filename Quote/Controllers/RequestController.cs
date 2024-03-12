@@ -14,20 +14,20 @@ namespace Quote.Controllers
     public class RequestController : ControllerBase
     {
         private readonly IRequestService _requestService;
-private readonly IMailService _mailService;
+        private readonly IMailService _mailService;
         private readonly IProductService _productService;
         private readonly ITaskInterface _taskInterface;
         private readonly UserInterface _userInterface;
 
-        public RequestController(IRequestService requestService, IMailService mailService, IProductService productService, UserInterface userInterface,ITaskInterface taskInterface)
+        public RequestController(IRequestService requestService, IMailService mailService, IProductService productService, UserInterface userInterface, ITaskInterface taskInterface)
         {
             _requestService = requestService;
             _mailService = mailService;
             _productService = productService;
             _userInterface = userInterface;
-              _taskInterface = taskInterface;
+            _taskInterface = taskInterface;
 
-   
+
         }
 
         [HttpPost("CreateRequest")]
@@ -50,7 +50,7 @@ private readonly IMailService _mailService;
                 UserName = requestdata.UserName,
             };
             var requestItem = await _requestService.CreateRequestUser(request);
-            var productItem = await _productService.GetProductById( (int)requestItem.ProductId);
+            var productItem = await _productService.GetProductId((int)requestItem.ProductId);
             var toEmail = requestItem.Email;
 
             var emailBody = $@"<div><h3>HỆ THỐNG ĐANG SẮP XẾP NHÂN VIÊN KHẢO SÁT</h3> 
@@ -251,7 +251,7 @@ private readonly IMailService _mailService;
                                 userEmail = item.Email,
                                 userName = item.UserName,
                                 userId = (int)item.UserId,
-                                userPhone = item.Phone,
+                                userPhone = item.Phone
                             },
                             ProdcuctData = new RequestProdcuct
                             {
@@ -368,19 +368,50 @@ private readonly IMailService _mailService;
             try
             {
                 var request = await _requestService.Appoinment(requestId);
-                if(request == null)
+                if (request == null)
                 {
                     return NotFound();
 
-                }            
-                    Models.Task newTask = new Models.Task();
-                    newTask.RequestId = request.RequestId; ;
-                    newTask.UserId = staffId;
-                    newTask.Status = "0";
-                    newTask.Location = request.Address;
-                    var item = await _taskService.CreateTasks(newTask);
-                    return Ok("Success");
+                }
+                Models.Task newTask = new Models.Task();
+                newTask.RequestId = request.RequestId; ;
+                newTask.UserId = staffId;
+                newTask.Status = "0";
+                newTask.Location = request.Address;
+                var item = await _taskInterface.CreateTasks(newTask);
+                var staff = await _userInterface.GetUserIDAsync((int)item.UserId);
+                var dataPro = await _productService.GetProductId((int)request.ProductId);
+                var toEmail = request.Email;
+                var emailBody = $@"<div><h3>THÔNG TIN LỊCH KHẢO SÁT </h3> 
+                          <div>
+                              <h3>Thông Tin Của Bạn </h3>    
+                              <span>Tên Người Gửi: </span> <strong>{request.UserName}</strong><br>
+                              <span>Số Điện Thoại: </span> <strong>{request.Phone:n0}</strong><br>
+                                <br>
+
+                                <h3>Thông Tin Nhân Viên Khảo Sát </h3> 
+                              <span>Tên Nhân Viên: </span> <strong>{staff.UserName}</strong><br>
+                              <span>Số Điện Thoại: </span> <strong>{staff.Phone:n0}</strong><br>
+                                <span>Email: </span> <strong>{staff.Email}</strong><br>
+                                <br>
+                                <h3>Danh Mục Bạn Đã Chọn </h3> 
+                              <span>Tên Sản Phẩm: </span> <strong>{dataPro.ProductName}</strong><br>
+                                <br>
+                            <h3>Thông Tin Khảo Sát </h3> 
+                              <span>Địa Chỉ Khảo Sát: </span> <strong>{request.Address}</strong><br>
+                              <span>Ngày Khảo Sát : </span> <strong>{request.Date}</strong><br>
                               
+                          </div>
+                          <p>Xin trân trọng cảm ơn</p>
+                      </div>";
+                var mailRequest = new MailRequest()
+                {
+                    ToEmail = toEmail,
+                    Subject = "[GOAT INTERIOR] CHÚNG TÔI ĐÃ NHẬN ĐƯỢC YÊU CẦU CỦA BẠN!",
+                    Body = emailBody
+                };
+                await _mailService.SendEmailAsync(mailRequest);
+                return Ok("Success");
             }
             catch (Exception ex)
             {
