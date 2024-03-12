@@ -137,7 +137,7 @@ namespace Quote.Controllers
         {
             try
             {
-                var pro = await _productService.GetProductById(productId);
+                var pro = await _productService.GetProductId(productId);
                 var img = await _imageService.GetImgById(productId);
                 var opt = await _optionService.GetOptionById(productId);
 

@@ -9,6 +9,7 @@ namespace Quote.Interfaces.ServiceInterface
         Task<List<Image>> GetImageAsync();
         Task<List<Option>> GetOptionAsync();
         Task<List<Category>> GetCategoryAsync();
+        Task<Category> GetCategoryIdAsync(int cartId);
         Task<Product> DeleteProduct(int id);
 
         System.Threading.Tasks.Task Save();
@@ -19,7 +20,7 @@ namespace Quote.Interfaces.ServiceInterface
 
         Task<List<Product>> GetAllProduct();
 
-        Task<Product> GetProductById(int id);
+        Task<Product> GetProductId(int id);
 
     }
 }

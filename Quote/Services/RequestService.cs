@@ -81,7 +81,22 @@ namespace Quote.Services
             return null;
         }
 
-        
+
+        public async Task<List<Models.Contract>> GetContract()
+        {
+            var list = await _repoCt.GetAllAsync();
+            if (list != null)
+            {
+
+                return list;
+            }
+            return null;
+        }
+
+        public Task<List<Models.Request>> GetRequestOfStatus()
+        {
+            throw new NotImplementedException();
+        }
 
         public async Task<Models.Contract> UpdateContractUser(Models.Contract contract)
         {
@@ -100,7 +115,25 @@ namespace Quote.Services
                 throw new Exception("Error getting users: " + ex.Message);
             }
         }
+        public async Task<Models.Contract> UpdateContractUserId(int contractId)
+        {
+            try
+            {
 
+                var contractrt = await _repoCt.GetByIdAsync(contractId);
+                contractrt.Status = "2";
+                var update = await _repoCt.UpdateAsync(contractrt);
+                if (contractrt != null)
+                {
+                    return update;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error getting users: " + ex.Message);
+            }
+        }
         public Task<Models.Request> UpdateRequestUser(Models.Request request)
         {
             throw new NotImplementedException();
