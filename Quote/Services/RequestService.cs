@@ -121,7 +121,7 @@ namespace Quote.Services
             {
 
                 var contractrt = await _repoCt.GetByIdAsync(contractId);
-                contractrt.Status = "2";
+                contractrt.Status = "3";
                 var update = await _repoCt.UpdateAsync(contractrt);
                 if (contractrt != null)
                 {
