@@ -251,7 +251,7 @@ private readonly IMailService _mailService;
                                 userEmail = item.Email,
                                 userName = item.UserName,
                                 userId = (int)item.UserId,
-                                userPhone = item.Phone,
+                                userPhone = item.Phone
                             },
                             ProdcuctData = new RequestProdcuct
                             {
