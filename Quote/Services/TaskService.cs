@@ -23,6 +23,12 @@ namespace Quote.Services
            
         }
 
+        public async Task<Models.Task> GetTaskById(int taskId)
+        {
+            var task = await _repo.GetByIdAsync(taskId);
+            return task;
+        }
+
         public async Task<List<Models.Task>> GetTasks()
         {
             var list = await _repo.GetAllAsync();
@@ -31,6 +37,12 @@ namespace Quote.Services
                 return null;
             }
             return list;
+        }
+
+        public async Task<Models.Task> UpdateTasks(Models.Task task)
+        {
+            var taskUp = await _repo.UpdateAsync(task);
+            return taskUp;
         }
     }
 }
