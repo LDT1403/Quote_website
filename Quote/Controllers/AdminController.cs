@@ -14,9 +14,10 @@ namespace Quote.Controllers
         private readonly IRequestService _requestService;
         private readonly UserInterface _userInterface;
 
-        public AdminController(IRequestService requestService)
+        public AdminController(IRequestService requestService, UserInterface userInterface)
         {
             _requestService = requestService;
+            _userInterface = userInterface;
         }
         [HttpGet("GetContractAdmin")]
         public async Task<IActionResult> GetContractAdmin(string status)
@@ -71,6 +72,9 @@ namespace Quote.Controllers
                 var contract = await _requestService.GetContractById(contractId);
                 contract.Status = "2";
                 await _requestService.UpdateContractUser(contract);
+                var request = await _requestService.GetRequestById((int)contract.RequestId);
+                request.Status = "4";
+                await _requestService.UpdateRequestUser(request);
                 return Ok("Success"); 
             }
             catch (Exception ex) 
