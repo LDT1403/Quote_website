@@ -81,6 +81,8 @@ namespace Quote.Services
             return null;
         }
 
+        
+
         public async Task<Models.Contract> UpdateContractUser(Models.Contract contract)
         {
             try
@@ -103,5 +105,6 @@ namespace Quote.Services
         {
             throw new NotImplementedException();
         }
+        
     }
 }

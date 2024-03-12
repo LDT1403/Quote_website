@@ -39,6 +39,8 @@
   <ItemGroup>
     <Folder Include="wwwroot\Upload\contract\" />
     <Folder Include="wwwroot\Upload\contract\" />
+    <Folder Include="wwwroot\Upload\contract\" />
+    <Folder Include="wwwroot\Upload\product\" />
     <Folder Include="wwwroot\Upload\product\" />
     <Folder Include="wwwroot\Upload\product\" />
   </ItemGroup>

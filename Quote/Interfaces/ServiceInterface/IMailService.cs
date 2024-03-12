@@ -3,7 +3,7 @@ using Quote.Modal.request;
 
 namespace Quote.Interfaces.ServiceInterface
 {
-    public interface IMailSender
+    public interface IMailService
     {
         Task SendEmailAsync(MailRequest mailController);
     }
