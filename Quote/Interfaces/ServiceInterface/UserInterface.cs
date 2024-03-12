@@ -8,6 +8,7 @@ namespace Quote.Interfaces.ServiceInterface
         Task<User> GetUserIDAsync(int userId);
         Task<List<User>> GetUsersAsync();
         Task<User> RegisterAsync(RegisterModal user);
+        Task<User> UserById(int userId);
 
         Task<List<User>> GetStaffByStatus(int staffid);
 

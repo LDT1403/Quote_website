@@ -165,13 +165,24 @@ public ProductService(ProductRepository repo, OptionRepository repoOP, ImageRepo
             
         }
 
-        public async Task<Product> GetProductById(int id)
+        public async Task<Product> GetProductId(int id)
         {
             var pro = await _repo.GetByIdAsync(id);
 
              if(pro != null)
             {
                 return pro;
+            }
+            return null;
+        }
+
+        public async Task<Category> GetCategoryIdAsync(int cartId)
+        {
+            var cate = await _repoCategory.GetByIdAsync(cartId);
+
+            if (cate != null)
+            {
+                return cate;
             }
             return null;
         }

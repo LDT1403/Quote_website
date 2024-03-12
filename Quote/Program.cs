@@ -24,7 +24,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1",
-                  new OpenApiInfo { Title = "Tét Api", Version = "v1" });
+                  new OpenApiInfo { Title = "Test Api", Version = "v1" });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "Standard Authorization header using the Bearer scheme. Example: \"bearer {token}\"",

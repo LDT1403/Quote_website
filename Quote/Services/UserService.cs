@@ -107,5 +107,17 @@ namespace Quote.Services
                 throw new Exception("Error registering user: " + ex.Message);
             }
         }
+
+        public async Task<User> UserById(int userId)
+        {
+            try
+            {
+                var user = await _repo.GetByIdAsync(userId);
+                return user;
+            }catch (Exception ex)
+            {
+                throw new Exception("Error registering user: " + ex.Message);
+            }
+        }
     }
 }

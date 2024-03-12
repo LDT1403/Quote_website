@@ -8,11 +8,13 @@ namespace Quote.Interfaces.ServiceInterface
         Task<Request> UpdateRequestUser(Request request);
 
         Task<List<Request>> GetAllRequest();
+        Task<List<Request>> GetRequestOfStatus();
         Task<Request> CreateRequestUser(Request request);
         Task<Contract> CreateContractUser(Contract contract);
-
+        Task<List<Contract>> GetContract();
         Task<Request> Appoinment(int requestid);
         Task<Contract> UpdateContractUser(Contract contract);
+        Task<Contract> UpdateContractUserId(int contractId);
     }
 
 }

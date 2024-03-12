@@ -34,13 +34,13 @@ namespace Quote.Controllers
         [HttpGet("PaymentCallback/{paymentId:int}")]
         public async Task<ActionResult> PaymentCallback([FromRoute] int paymentId, [FromQuery] VnPaymentCallbackModel request)
         {
-            // var orders = await _orderService.GetOrderByPaymentId(paymentId);
+          
             if (!request.Success)
             {
                 return Redirect(_configuration["Payment:Failed"]);
             }
-            //var payment = await _paymentService.GetPayContract(paymentId);
-            //await _requestService.UpdateContractUser((int)payment.ContractId);
+            var payment = await _paymentService.GetPayContract(paymentId);
+            await _requestService.UpdateContractUserId((int)payment.ContractId);
 
             return Redirect(_configuration["Payment:SuccessUrl"]);
 
