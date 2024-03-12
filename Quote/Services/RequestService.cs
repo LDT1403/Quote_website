@@ -103,7 +103,19 @@ namespace Quote.Services
                 
                 throw new Exception("Error getting users: " + ex.Message); }
         }
+        public async Task<Models.Contract> GetContractById(int contractId)
+        {
+            try
+            {
+                var contract = await _repoCt.GetByIdAsync(contractId);
+                return contract;
+            }
+            catch (Exception ex)
+            {
 
+                throw new Exception("Error getting users: " + ex.Message);
+            }
+        }
         public Task<List<Models.Request>> GetRequestOfStatus()
         {
             throw new NotImplementedException();
