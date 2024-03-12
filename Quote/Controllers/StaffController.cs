@@ -104,7 +104,6 @@ namespace Quote.Controllers
         }
 
         [HttpGet("GetAllProduct")]
-
         public async Task<IActionResult> GetAllProduct()
         {
             try
@@ -266,6 +265,7 @@ namespace Quote.Controllers
 
                 //        return Ok(res);
                     
-                }  
+                    
+    }  
 
 }

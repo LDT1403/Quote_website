@@ -15,6 +15,7 @@ namespace Quote.Interfaces.ServiceInterface
         Task<Request> Appoinment(int requestid);
         Task<Contract> UpdateContractUser(Contract contract);
         Task<Contract> UpdateContractUserId(int contractId);
+        Task<Contract> GetContractById(int contractId);
     }
 
 }
