@@ -77,7 +77,7 @@ builder.Services.AddScoped<RequestRepository>();
 builder.Services.AddScoped<PaymentRepository>();
 builder.Services.AddDbContext<DB_SWDContext>();
 
-builder.Services.AddScoped<IMailSender, MailService>();
+builder.Services.AddScoped<IMailService, MailService>();
 builder.Services.AddAutoMapper(typeof(AutoMapperHandler).Assembly);
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //    .AddJwtBearer();
