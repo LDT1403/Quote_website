@@ -6,7 +6,7 @@ using Quote.Modal.request;
 
 namespace Quote.Services
 {
-    public class MailService : IMailSender
+    public class MailService : IMailService
     {
         private readonly string _host;
         private readonly int _port;

@@ -81,6 +81,7 @@ namespace Quote.Services
             return null;
         }
 
+
         public async Task<List<Models.Contract>> GetContract()
         {
             var list = await _repoCt.GetAllAsync();
@@ -137,5 +138,6 @@ namespace Quote.Services
         {
             throw new NotImplementedException();
         }
+        
     }
 }

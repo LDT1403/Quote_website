@@ -17,7 +17,7 @@ namespace Quote.Modal
         [StringLength(250)]
         public string Role { get; set; }
  
-        public byte[] Image { get; set; }
+        public string[] Image { get; set; }
     
         public string? Dob { get; set; }
 
