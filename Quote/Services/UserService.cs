@@ -120,6 +120,23 @@ namespace Quote.Services
             }
         }
 
+
+        public async Task<User> UpdateStatusStaff(User user)
+        {
+            try
+            {
+                var item = await _repo.UpdateAsync(user);
+                if (item == null)
+                {
+                    return null;
+                }
+                return item;
+
+            }catch(Exception ex)
+            {
+                throw new Exception("Error registering user: " + ex.Message);
+            }
+        }
         public async Task<User> RegisterStaffAsync(User user)
         {
             try
