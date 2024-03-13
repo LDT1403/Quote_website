@@ -43,7 +43,7 @@ namespace Quote.Controllers
                 Address = requestdata.Address,
                 Email = requestdata.Email,
                 ProductId = requestdata.ProductId,
-                Date = DateTime.Parse(requestdata.Date),
+                Date = requestdata.Date.ToString(),
                 Status = requestdata.Status,
                 UserId = requestdata.UserId,
                 Phone = requestdata.Phone,
@@ -376,7 +376,7 @@ namespace Quote.Controllers
                 Models.Task newTask = new Models.Task();
                 newTask.RequestId = request.RequestId; ;
                 newTask.UserId = staffId;
-                newTask.Status = "0";
+                newTask.Status = "1";
                 newTask.Location = request.Address;
                 var item = await _taskInterface.CreateTasks(newTask);
                 var staff = await _userInterface.GetUserIDAsync((int)item.UserId);

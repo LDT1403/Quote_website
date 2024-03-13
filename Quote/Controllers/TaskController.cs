@@ -26,7 +26,7 @@ namespace Quote.Controllers
         {
             try
             {
-                var list = _taskService.GetTasks();
+                var list =await _taskService.GetTasks();
                 if(list == null)
                 {
                     return BadRequest();

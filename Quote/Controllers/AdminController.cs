@@ -13,11 +13,13 @@ namespace Quote.Controllers
     {
         private readonly IRequestService _requestService;
         private readonly UserInterface _userInterface;
+        private readonly ITaskInterface _taskInterface;
 
-        public AdminController(IRequestService requestService, UserInterface userInterface)
+        public AdminController(IRequestService requestService, UserInterface userInterface, ITaskInterface taskInterface)
         {
             _requestService = requestService;
             _userInterface = userInterface;
+            _taskInterface = taskInterface;
         }
         [HttpGet("GetContractAdmin")]
         public async Task<IActionResult> GetContractAdmin(string status)
@@ -75,6 +77,9 @@ namespace Quote.Controllers
                 var request = await _requestService.GetRequestById((int)contract.RequestId);
                 request.Status = "4";
                 await _requestService.UpdateRequestUser(request);
+                var task = await _taskInterface.GetTasks();
+                var taskList = task.ToList().Where(t => t.RequestId == request.RequestId).FirstOrDefault();
+                taskList.Status="2";
                 return Ok("Success"); 
             }
             catch (Exception ex) 

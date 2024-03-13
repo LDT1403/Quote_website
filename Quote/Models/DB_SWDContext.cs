@@ -183,7 +183,7 @@ public partial class DB_SWDContext : DbContext
             entity.ToTable("Request");
 
             entity.Property(e => e.Address).HasMaxLength(500);
-            entity.Property(e => e.Date).HasColumnType("date");
+            entity.Property(e => e.Date).HasMaxLength(500);
             entity.Property(e => e.Email).HasMaxLength(250);
             entity.Property(e => e.Phone).HasMaxLength(250);
             entity.Property(e => e.Status).HasMaxLength(500);
