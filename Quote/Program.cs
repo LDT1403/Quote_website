@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication;
 using Quote.Models;
 using Microsoft.OpenApi.Models;
 using Quote.Modal;
+using Quote.Interfaces.RepositoryInterface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -75,7 +76,7 @@ builder.Services.AddScoped<ContractRepository>();
 builder.Services.AddScoped<RequestRepository>();
 builder.Services.AddScoped<PaymentRepository>();
 builder.Services.AddDbContext<DB_SWDContext>();
-
+builder.Services.AddScoped(typeof(IRepoBase<>), typeof(RepoBase<>));
 builder.Services.AddScoped<IMailService, MailService>();
 builder.Services.AddAutoMapper(typeof(AutoMapperHandler).Assembly);
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
