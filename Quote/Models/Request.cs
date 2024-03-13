@@ -25,6 +25,8 @@ public partial class Request
 
     public string UserName { get; set; }
 
+    public DateTime? DateCre { get; set; }
+
     public virtual Contract Contract { get; set; }
 
     public virtual Product Product { get; set; }

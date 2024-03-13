@@ -1,4 +1,5 @@
-﻿using Quote.Interfaces.ServiceInterface;
+﻿using Quote.Interfaces.RepositoryInterface;
+using Quote.Interfaces.ServiceInterface;
 using Quote.Modal;
 using Quote.Models;
 using Quote.Repositorys;
@@ -10,10 +11,10 @@ namespace Quote.Services
 {
     public class CartService : ICartService
     {
-        private readonly CartDetailRepository _repository;
-        private readonly CartRepository _cartRepository;
+        private readonly IRepoBase<CartDetail> _repository;
+        private readonly IRepoBase<Cart> _cartRepository;
 
-        public CartService(CartDetailRepository repository, CartRepository cartRepository)
+        public CartService(IRepoBase<CartDetail> repository, IRepoBase<Cart> cartRepository)
         {
             _repository = repository;
             _cartRepository = cartRepository;

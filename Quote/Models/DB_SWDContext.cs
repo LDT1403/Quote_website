@@ -8,13 +8,13 @@ namespace Quote.Models;
 
 public partial class DB_SWDContext : DbContext
 {
-    public DB_SWDContext(DbContextOptions<DB_SWDContext> options)
-        : base(options)
-    {
-    }
     public DB_SWDContext()
     {
 
+    }
+    public DB_SWDContext(DbContextOptions<DB_SWDContext> options)
+        : base(options)
+    {
     }
 
     public virtual DbSet<Cart> Carts { get; set; }
@@ -169,7 +169,9 @@ public partial class DB_SWDContext : DbContext
             entity.ToTable("Product");
 
             entity.Property(e => e.Description).HasColumnType("ntext");
-            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
+            entity.Property(e => e.IsDelete)
+                .HasDefaultValueSql("((0))")
+                .HasColumnName("isDelete");
             entity.Property(e => e.Price).HasMaxLength(50);
             entity.Property(e => e.ProductName).HasMaxLength(500);
 
@@ -183,7 +185,8 @@ public partial class DB_SWDContext : DbContext
             entity.ToTable("Request");
 
             entity.Property(e => e.Address).HasMaxLength(500);
-            entity.Property(e => e.Date).HasMaxLength(500);
+            entity.Property(e => e.Date).HasMaxLength(250);
+            entity.Property(e => e.DateCre).HasColumnType("date");
             entity.Property(e => e.Email).HasMaxLength(250);
             entity.Property(e => e.Phone).HasMaxLength(250);
             entity.Property(e => e.Status).HasMaxLength(500);
@@ -247,6 +250,9 @@ public partial class DB_SWDContext : DbContext
             entity.Property(e => e.Dob).HasMaxLength(250);
             entity.Property(e => e.Email).HasMaxLength(250);
             entity.Property(e => e.Image).HasColumnType("ntext");
+            entity.Property(e => e.IsDelete)
+                .HasDefaultValueSql("((0))")
+                .HasColumnName("isDelete");
             entity.Property(e => e.Password).HasMaxLength(250);
             entity.Property(e => e.Phone).HasMaxLength(50);
             entity.Property(e => e.Position).HasMaxLength(250);

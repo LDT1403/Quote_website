@@ -27,9 +27,9 @@ namespace Quote.Controllers
         }
         [HttpPost("Pay")]
         //[Authorize]
-        public async Task<ActionResult<PaymentResponse>> CreatePayment([FromBody] PayRequestModel request,int userId)
+        public async Task<ActionResult<PaymentResponse>> CreatePayment([FromBody] PayRequestModel request)
         {
-            var response = await _paymentService.PayContract(request.ContractId, request.Method , userId);
+            var response = await _paymentService.PayContract(request.ContractId, request.Method , request.userId);
             return Ok(response);
         }
         [HttpGet("PaymentCallback/{paymentId:int}")]
@@ -39,7 +39,8 @@ namespace Quote.Controllers
             if (!request.Success)
             {
                 var paymenta = await _paymentService.GetPayContract(paymentId);
-
+                paymenta.Status = "fail";
+                await _paymentService.UpdatePay(paymenta);
                 return Redirect(_configuration["Payment:Failed"]);
             }
             var payment = await _paymentService.GetPayContract(paymentId);

@@ -8,6 +8,7 @@ namespace Quote.Modal.request
         public int ContractId { get; set; }
         [Required]
         public string Method { get; set; }
+        public int userId { get; set; }
 
     }
 
