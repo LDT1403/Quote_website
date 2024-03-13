@@ -43,7 +43,7 @@ namespace Quote.Controllers
                 Address = requestdata.Address,
                 Email = requestdata.Email,
                 ProductId = requestdata.ProductId,
-                Date = DateTime.Parse(requestdata.Date),
+                Date = requestdata.Date,
                 Status = requestdata.Status,
                 UserId = requestdata.UserId,
                 Phone = requestdata.Phone,
@@ -137,7 +137,7 @@ namespace Quote.Controllers
                         var proimg = await _productService.GetImageAsync();
                         var thumb = proimg.Where(i => i.ProductId == dataPro.ProductId).FirstOrDefault();
                         var taskL = await _taskInterface.GetTasks();
-                        var taskData = taskL.Where(t => t.RequestId == item.RequestId && t.Status == "0").FirstOrDefault();
+                        var taskData = taskL.Where(t => t.RequestId == item.RequestId && t.Status == "1").FirstOrDefault();
                         var staff = await _userInterface.GetUserIDAsync((int)taskData.UserId);
                         var dataAdd = new RequestStatusResqonse
                         {
@@ -187,7 +187,7 @@ namespace Quote.Controllers
                         var proimg = await _productService.GetImageAsync();
                         var thumb = proimg.Where(i => i.ProductId == dataPro.ProductId).FirstOrDefault();
                         var taskL = await _taskInterface.GetTasks();
-                        var taskData = taskL.Where(t => t.RequestId == item.RequestId && t.Status == "0").FirstOrDefault();
+                        var taskData = taskL.Where(t => t.RequestId == item.RequestId && t.Status == "1").FirstOrDefault();
                         var staff = await _userInterface.GetUserIDAsync((int)taskData.UserId);
                         var dataAdd = new RequestStatusResqonse
                         {
@@ -236,7 +236,7 @@ namespace Quote.Controllers
                         var proimg = await _productService.GetImageAsync();
                         var thumb = proimg.Where(i => i.ProductId == dataPro.ProductId).FirstOrDefault();
                         var taskL = await _taskInterface.GetTasks();
-                        var taskData = taskL.Where(t => t.RequestId == item.RequestId && t.Status == "0").FirstOrDefault();
+                        var taskData = taskL.Where(t => t.RequestId == item.RequestId && t.Status == "2").FirstOrDefault();
                         var staff = await _userInterface.GetUserIDAsync((int)taskData.UserId);
                         var contract = await _requestService.GetContract();
                         var contractData = contract.Where(c => c.RequestId == item.RequestId).FirstOrDefault();
@@ -273,7 +273,8 @@ namespace Quote.Controllers
                                 contractId = contractData.ContractId,
                                 priceProduct = contractData.FinalPrice,
                                 priceConstruc = contractData.ConPrice,
-                                contracFile = contractData.ContractFile
+                                contracFile = contractData.ContractFile,
+                                status = contractData.Status,
                             },
 
                         };
@@ -293,7 +294,7 @@ namespace Quote.Controllers
                         var proimg = await _productService.GetImageAsync();
                         var thumb = proimg.Where(i => i.ProductId == dataPro.ProductId).FirstOrDefault();
                         var taskL = await _taskInterface.GetTasks();
-                        var taskData = taskL.Where(t => t.RequestId == item.RequestId && t.Status == "0").FirstOrDefault();
+                        var taskData = taskL.Where(t => t.RequestId == item.RequestId && t.Status == "2").FirstOrDefault();
                         var staff = await _userInterface.GetUserIDAsync((int)taskData.UserId);
                         var contract = await _requestService.GetContract();
                         var contractData = contract.Where(c => c.RequestId == item.RequestId).FirstOrDefault();
@@ -367,6 +368,16 @@ namespace Quote.Controllers
         {
             try
             {
+                var user = await _userInterface.GetUserIDAsync(staffId);
+                if(user == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    user.Status = "1";
+                    await _userInterface.UpdateStatusStaff(user);
+                }
                 var request = await _requestService.Appoinment(requestId);
                 if (request == null)
                 {
@@ -376,7 +387,7 @@ namespace Quote.Controllers
                 Models.Task newTask = new Models.Task();
                 newTask.RequestId = request.RequestId; ;
                 newTask.UserId = staffId;
-                newTask.Status = "0";
+                newTask.Status = "1";
                 newTask.Location = request.Address;
                 var item = await _taskInterface.CreateTasks(newTask);
                 var staff = await _userInterface.GetUserIDAsync((int)item.UserId);

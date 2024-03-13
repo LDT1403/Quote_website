@@ -16,5 +16,7 @@ namespace Quote.Interfaces.ServiceInterface
 
         Task<List<User>> GetStaffById(int staffid);
 
+        Task<User> UpdateStatusStaff(User user);
+
     }
 }

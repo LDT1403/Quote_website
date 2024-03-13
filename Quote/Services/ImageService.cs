@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Quote.Interfaces.RepositoryInterface;
 using Quote.Interfaces.ServiceInterface;
 using Quote.Models;
 using Quote.Repositorys;
@@ -7,10 +8,10 @@ namespace Quote.Services
 {
     public class ImageService : IImageService
     {
-        private readonly ImageRepository _repo;
+        private readonly IRepoBase<Models.Image> _repo;
         private readonly IMapper _mapper;
 
-       public ImageService(ImageRepository repo, IMapper mapper)
+       public ImageService(IRepoBase<Models.Image> repo, IMapper mapper)
         {
             _repo = repo;
             _mapper = mapper;
