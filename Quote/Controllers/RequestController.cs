@@ -43,7 +43,7 @@ namespace Quote.Controllers
                 Address = requestdata.Address,
                 Email = requestdata.Email,
                 ProductId = requestdata.ProductId,
-                Date = DateTime.Parse(requestdata.Date),
+                Date = requestdata.Date,
                 Status = requestdata.Status,
                 UserId = requestdata.UserId,
                 Phone = requestdata.Phone,
