@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using Quote.Interfaces.RepositoryInterface;
 using Quote.Interfaces.ServiceInterface;
 using Quote.Modal;
 using Quote.Models;
@@ -9,11 +10,11 @@ namespace Quote.Services
 {
     public class PaymentService : IPaymentService
     {
-        private readonly PaymentRepository _repoPay;
-        private readonly ContractRepository _repoCont;
+        private readonly IRepoBase<Payment> _repoPay;
+        private readonly IRepoBase<Models.Contract> _repoCont;
         private readonly IVnPayService _serviceVnPay;
 
-        public PaymentService(PaymentRepository repoPay, ContractRepository repoCont, IVnPayService vnPayService )
+        public PaymentService(IRepoBase<Payment> repoPay, IRepoBase<Models.Contract> repoCont, IVnPayService vnPayService )
         {
             _repoPay = repoPay;
             _repoCont = repoCont;
