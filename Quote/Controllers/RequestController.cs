@@ -367,6 +367,16 @@ namespace Quote.Controllers
         {
             try
             {
+                var user = await _userInterface.GetUserIDAsync(staffId);
+                if(user == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    user.Status = "1";
+                    await _userInterface.UpdateStatusStaff(user);
+                }
                 var request = await _requestService.Appoinment(requestId);
                 if (request == null)
                 {
