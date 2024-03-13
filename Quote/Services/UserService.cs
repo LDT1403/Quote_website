@@ -120,17 +120,21 @@ namespace Quote.Services
             }
         }
 
-        public async Task<User> UpdateStatusStaff(User user)
+        public async Task<User> RegisterStaffAsync(User user)
         {
             try
             {
-                var item = await _repo.UpdateAsync(user);
-                if (item == null)
+                if (await _repo.IsEmailExists(user.Email))
                 {
                     return null;
                 }
-                return item;
-                
+                else
+                {
+                    user.Role = "ST";
+
+                    await _repo.AddAsync(user);
+                    return user;
+                }
             }
             catch (Exception ex)
             {

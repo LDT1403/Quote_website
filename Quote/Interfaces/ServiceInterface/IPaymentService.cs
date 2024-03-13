@@ -7,5 +7,6 @@ namespace Quote.Interfaces.ServiceInterface
     {
         Task<PaymentResponse> PayContract(int ContractId, string method, int userId);
         Task<Payment> GetPayContract(int PaymentId);
+        System.Threading.Tasks.Task UpdatePay(Payment payment);
     }
 }

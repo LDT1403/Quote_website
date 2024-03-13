@@ -19,4 +19,13 @@
         public string Position { get; set; }
         public string? Date { get; set; }
     }
+    public class StaffModal
+    {
+        public string UserName { get; set;}
+        public string Email { get; set; }
+        public string Phone { get; set; }
+        public int? managerId { get; set; }
+        public string Position { get; set; }
+
+    }
 }

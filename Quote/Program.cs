@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Quote.Helper;
 using Quote.Interfaces.ServiceInterface;
-
 using Quote.Repositorys;
 using Quote.Services;
 using System.Text;

@@ -93,6 +93,29 @@ namespace Quote.Services
             return null;
         }
 
+        public async Task<Models.Request> GetRequestById(int requestId)
+        {
+            try {
+                var request = await _repo.GetByIdAsync(requestId);
+                return request;
+            }
+            catch (Exception ex) { 
+                
+                throw new Exception("Error getting users: " + ex.Message); }
+        }
+        public async Task<Models.Contract> GetContractById(int contractId)
+        {
+            try
+            {
+                var contract = await _repoCt.GetByIdAsync(contractId);
+                return contract;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception("Error getting users: " + ex.Message);
+            }
+        }
         public Task<List<Models.Request>> GetRequestOfStatus()
         {
             throw new NotImplementedException();
@@ -119,10 +142,12 @@ namespace Quote.Services
         {
             try
             {
-
                 var contractrt = await _repoCt.GetByIdAsync(contractId);
-                contractrt.Status = "2";
+                contractrt.Status = "3";
                 var update = await _repoCt.UpdateAsync(contractrt);
+                var request = await _repo.GetByIdAsync((int)contractrt.RequestId);
+                request.Status = "5";
+                await _repo.UpdateAsync(request);
                 if (contractrt != null)
                 {
                     return update;
@@ -134,9 +159,10 @@ namespace Quote.Services
                 throw new Exception("Error getting users: " + ex.Message);
             }
         }
-        public Task<Models.Request> UpdateRequestUser(Models.Request request)
+        public async Task<Models.Request> UpdateRequestUser(Models.Request request)
         {
-            throw new NotImplementedException();
+            var re = await _repo.UpdateAsync(request);
+            return re;
         }
         
     }

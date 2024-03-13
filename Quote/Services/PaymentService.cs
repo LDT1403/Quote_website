@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using Quote.Interfaces.ServiceInterface;
 using Quote.Modal;
 using Quote.Models;
@@ -56,6 +57,12 @@ namespace Quote.Services
                 UserId = (int)payment.UserId
             };
             return payrespon;
+        }
+
+        public async System.Threading.Tasks.Task UpdatePay(Payment payment)
+        {
+            
+            await _repoPay.UpdateAsync(payment);            
         }
     }
 }

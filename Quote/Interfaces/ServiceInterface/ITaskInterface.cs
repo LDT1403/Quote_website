@@ -7,5 +7,7 @@ namespace Quote.Interfaces.ServiceInterface
         Task<List<Models.Task>> GetTasks();
 
         Task<Models.Task> CreateTasks(Models.Task task);
+        Task<Models.Task> UpdateTasks(Models.Task task);
+        Task<Models.Task> GetTaskById(int taskId);
     }
 }
