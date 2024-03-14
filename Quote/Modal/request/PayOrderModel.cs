@@ -9,6 +9,7 @@ namespace Quote.Modal.request
         [Required]
         public string Method { get; set; }
         public int userId { get; set; }
+        public byte[]  ContractFile { get; set; }
 
     }
 

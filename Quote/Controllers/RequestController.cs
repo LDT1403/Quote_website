@@ -129,7 +129,7 @@ namespace Quote.Controllers
                 {
                     var dataResponse = new List<RequestStatusResqonse>();
                     var list = await _requestService.GetAllRequest();
-                    var listRe = list.Where(r => r.UserId == data.Id && r.Status == data.Status).ToList();
+                    var listRe = list.Where(r => r.UserId == data.Id &&( r.Status == "2" && r.Status == "3") ).ToList();
                     foreach (var item in listRe)
                     {
                         var dataPro = await _productService.GetProductId((int)item.ProductId);
@@ -175,11 +175,11 @@ namespace Quote.Controllers
                     return Ok(dataResponse);
                 }
                 else
-                if (data.Status == "3")
+                if (data.Status == "0")
                 {
                     var dataResponse = new List<RequestStatusResqonse>();
                     var list = await _requestService.GetAllRequest();
-                    var listRe = list.Where(r => r.UserId == data.Id && r.Status == data.Status).ToList();
+                    var listRe = list.Where(r => r.UserId == data.Id).ToList();
                     foreach (var item in listRe)
                     {
                         var dataPro = await _productService.GetProductId((int)item.ProductId);

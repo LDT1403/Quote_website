@@ -104,6 +104,7 @@ namespace Quote.Controllers
             };
 
             var contractres = await _requestService.CreateContractUser(contract);
+
             string Filepath = GetContractFile(contractres.ContractId.ToString());
             if (!Directory.Exists(Filepath))
             {
