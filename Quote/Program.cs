@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication;
 using Quote.Models;
 using Microsoft.OpenApi.Models;
 using Quote.Modal;
+using Quote.Interfaces.RepositoryInterface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,30 +53,21 @@ builder.Services.AddSwaggerGen(c =>
 
 }
 );
-builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserInterface,UserService>();
-builder.Services.AddScoped<ProductRepository>();
+
 builder.Services.AddScoped<IProductService,ProductService>();
 builder.Services.AddScoped<IOptionService, OptionService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<ITaskInterface, TaskService>();
-builder.Services.AddScoped<TaskRepository>();
-builder.Services.AddScoped<ImageRepository>();
 builder.Services.AddScoped<ProductModal>();
-builder.Services.AddScoped<OptionRepository>();
 builder.Services.AddScoped<ICartService, CartService>();
-builder.Services.AddScoped<CartRepository>();
-builder.Services.AddScoped<CartDetailRepository>();
-builder.Services.AddScoped<CategoryRepository>();
 builder.Services.AddScoped<IRequestService, RequestService>();
 builder.Services.AddScoped<IPaymentService,PaymentService>();
+builder.Services.AddScoped<IContractService, ContractService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IVnPayService, VnPayService>();
-builder.Services.AddScoped<ContractRepository>();
-builder.Services.AddScoped<RequestRepository>();
-builder.Services.AddScoped<PaymentRepository>();
 builder.Services.AddDbContext<DB_SWDContext>();
-
+builder.Services.AddScoped(typeof(IRepoBase<>), typeof(RepoBase<>));
 builder.Services.AddScoped<IMailService, MailService>();
 builder.Services.AddAutoMapper(typeof(AutoMapperHandler).Assembly);
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

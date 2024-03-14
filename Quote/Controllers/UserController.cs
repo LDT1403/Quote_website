@@ -93,6 +93,7 @@ namespace Quote.Controllers
                 new Claim("Email", user.Email),
                 new Claim("UserName" ,user.UserName),
                 new Claim("Role" ,user.Role),
+                new Claim("ManageId" ,user.ManagerId.ToString()),
                 new Claim(ClaimTypes.Role ,user.Role),
             };
 

@@ -38,12 +38,12 @@ namespace Quote.Controllers
             if (!request.Success)
             {
                 var paymenta = await _paymentService.GetPayContract(paymentId);
-                paymenta.Status = "fail";
+                paymenta.Status = "0";
                 await _paymentService.UpdatePay(paymenta);
                 return Redirect(_configuration["Payment:Failed"]);
             }
             var payment = await _paymentService.GetPayContract(paymentId);
-            payment.Status = "success";
+            payment.Status = "1";
             await _paymentService.UpdatePay(payment);
             await _requestService.UpdateContractUserId((int)payment.ContractId);
 

@@ -29,6 +29,8 @@ public partial class User
 
     public string Email { get; set; }
 
+    public bool? IsDelete { get; set; }
+
     public virtual Cart Cart { get; set; }
 
     public virtual ICollection<User> InverseManager { get; set; } = new List<User>();

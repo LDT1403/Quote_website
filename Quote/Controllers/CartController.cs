@@ -24,6 +24,9 @@ namespace Quote.Controllers
             try
             {
                 var cart = _cartService.GetCartAsync().Result.SingleOrDefault(c => c.UserId == userId);
+                if (cart == null) {
+                    return null;
+                }
                 var cartDetails = await _cartService.GetCartsAsync();
                 var cartDetailsOfCartId = cartDetails
                     .Where(cd => cd.CartId == cart.CartId).ToList();
@@ -31,19 +34,22 @@ namespace Quote.Controllers
                 foreach (var cd in cartDetailsOfCartId)
                 {
                     var pro = await _productService.GetProductAsync();
-                    var prodt = pro.FirstOrDefault(p => p.ProductId == cd.ProductId);
 
-                    var img = await _productService.GetImageAsync();
-                    var imgdt = img.FirstOrDefault(p => p.ProductId == cd.ProductId);
-                    var cartpush = new CartResponse()
+                    var prodt = pro.FirstOrDefault(p => p.ProductId == cd.ProductId);
+                    if(prodt?.IsDelete != true)
                     {
-                        CartDetailId = cd.CartDetailId,
-                        CartId = cart.CartId,
-                        ProductId = (int)cd.ProductId,
-                        ProductName = prodt?.ProductName,
-                        ProductThumbnail = imgdt?.ImagePath?.ToString()
-                    };
-                    catrpList.Add(cartpush);
+                        var img = await _productService.GetImageAsync();
+                        var imgdt = img.FirstOrDefault(p => p.ProductId == cd.ProductId);
+                        var cartpush = new CartResponse()
+                        {
+                            CartDetailId = cd.CartDetailId,
+                            CartId = cart.CartId,
+                            ProductId = (int)cd.ProductId,
+                            ProductName = prodt?.ProductName,
+                            ProductThumbnail = imgdt?.ImagePath?.ToString()
+                        };
+                        catrpList.Add(cartpush);
+                    }              
                 }
 
                 return Ok(catrpList);

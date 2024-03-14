@@ -113,11 +113,12 @@ namespace Quote.Controllers
                 var productWithCate = new List<ProductAllResponse>();
                 foreach (var cate in allPro)
                 {
-                    var img = _productService.GetImageAsync().Result.Where(i => i.ProductId == cate.ProductId).FirstOrDefault();
+                    var imgs = await _productService.GetImageAsync();
+                    var img = imgs.Where(i => i.ProductId == cate.ProductId).FirstOrDefault();
                     var productCate = new ProductAllResponse
                     {
                         ProductId = cate.ProductId,
-                        ImagePath = img.ImagePath,
+                        ImagePath = img?.ImagePath,
                         ProductName = cate.ProductName
                     };
                     productWithCate.Add(productCate);

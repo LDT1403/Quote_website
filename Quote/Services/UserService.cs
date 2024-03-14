@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Quote.Interfaces.RepositoryInterface;
 using Quote.Interfaces.ServiceInterface;
 using Quote.Modal;
 using Quote.Models;
@@ -12,12 +13,12 @@ namespace Quote.Services
 {
     public class UserService : UserInterface
     {
-        private readonly UserRepository _repo;
+        private readonly IRepoBase<User> _repo;
         private readonly IMapper _mapper;
 
-        public UserService(UserRepository userRepository, IMapper mapper)
+        public UserService(IRepoBase<User> repo, IMapper mapper)
         {
-            _repo = userRepository;
+            _repo = repo;
             _mapper = mapper;
         }
 
@@ -89,18 +90,18 @@ namespace Quote.Services
         {
             try
             {
-                if (await _repo.IsEmailExists(user.Email))
+                var list = await _repo.GetAllAsync();
+                foreach(var item in list)
                 {
-                    return null;
-                }
-                else
-                {
+                    if(item.Email == user.Email)
+                    {
+                        return null;
+                    }
+                }            
                     User userModel = _mapper.Map<RegisterModal, User>(user);
                     userModel.Role = "CUS";
-
                     await _repo.AddAsync(userModel);
-                    return userModel;
-                }
+                    return userModel;               
             }
             catch (Exception ex)
             {
@@ -120,21 +121,38 @@ namespace Quote.Services
             }
         }
 
+
+        public async Task<User> UpdateStatusStaff(User user)
+        {
+            try
+            {
+                var item = await _repo.UpdateAsync(user);
+                if (item == null)
+                {
+                    return null;
+                }
+                return item;
+
+            }catch(Exception ex)
+            {
+                throw new Exception("Error registering user: " + ex.Message);
+            }
+        }
         public async Task<User> RegisterStaffAsync(User user)
         {
             try
             {
-                if (await _repo.IsEmailExists(user.Email))
+                var list = await _repo.GetAllAsync();
+                foreach (var item in list)
                 {
-                    return null;
-                }
-                else
-                {
+                    if(item.Email == user.Email)
+                    {
+                        return null;
+                    }
+                }              
                     user.Role = "ST";
-
                     await _repo.AddAsync(user);
-                    return user;
-                }
+                    return user;              
             }
             catch (Exception ex)
             {

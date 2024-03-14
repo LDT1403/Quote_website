@@ -1,13 +1,14 @@
-﻿using Quote.Interfaces.ServiceInterface;
+﻿using Quote.Interfaces.RepositoryInterface;
+using Quote.Interfaces.ServiceInterface;
 using Quote.Repositorys;
 
 namespace Quote.Services
 {
     public class TaskService : ITaskInterface
     {
-        private readonly TaskRepository _repo;
+        private readonly IRepoBase<Models.Task> _repo;
 
-        public TaskService(TaskRepository repo)
+        public TaskService(IRepoBase<Models.Task> repo)
         {
             _repo = repo;
         }

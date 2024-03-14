@@ -43,7 +43,7 @@ namespace Quote.Controllers
                 Address = requestdata.Address,
                 Email = requestdata.Email,
                 ProductId = requestdata.ProductId,
-                Date = DateTime.Parse(requestdata.Date),
+                Date = requestdata.Date,
                 Status = requestdata.Status,
                 UserId = requestdata.UserId,
                 Phone = requestdata.Phone,
@@ -368,6 +368,16 @@ namespace Quote.Controllers
         {
             try
             {
+                var user = await _userInterface.GetUserIDAsync(staffId);
+                if(user == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    user.Status = "1";
+                    await _userInterface.UpdateStatusStaff(user);
+                }
                 var request = await _requestService.Appoinment(requestId);
                 if (request == null)
                 {
