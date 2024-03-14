@@ -53,6 +53,7 @@ builder.Services.AddSwaggerGen(c =>
 
 }
 );
+builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserInterface,UserService>();
 
 builder.Services.AddScoped<IProductService,ProductService>();

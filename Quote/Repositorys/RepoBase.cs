@@ -110,7 +110,6 @@ namespace Quote.Repositorys
                 {
                     throw new Exception($"Entity with ID {id} not found.");
                 }
-
                 _dbSet.Remove(entity);
                 await _context.SaveChangesAsync();
                 return true;

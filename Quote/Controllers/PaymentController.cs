@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Quote.Interfaces.ServiceInterface;
 using Quote.Modal;
 using Quote.Modal.request;
+using Quote.Services;
+using System.Text.RegularExpressions;
 
 namespace Quote.Controllers
 {
@@ -16,19 +18,63 @@ namespace Quote.Controllers
         private readonly IPaymentService _paymentService;
         private readonly IRequestService _requestService;
         private readonly IMapper _mapper;
-        public PaymentController(IConfiguration configuration, IPaymentService paymentService, IMapper mapper, IRequestService requestService)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public PaymentController(IConfiguration configuration, IPaymentService paymentService, IMapper mapper, IRequestService requestService , IWebHostEnvironment webHostEnvironment)
         {
             _configuration = configuration;
             _paymentService = paymentService;
             _mapper = mapper;
             _requestService = requestService;
+            _webHostEnvironment = webHostEnvironment;
         }
         [HttpPost("Pay")]
         //[Authorize]
-        public async Task<ActionResult<PaymentResponse>> CreatePayment([FromBody] PayRequestModel request)
+        public async Task<ActionResult<PaymentResponse>> CreatePayment([FromForm] PayRequestModel request)
         {
-            var response = await _paymentService.PayContract(request.ContractId, request.Method , request.userId);
+           
+
+
+            string Filepath = GetContractFile(request.ContractId.ToString());
+            if (!Directory.Exists(Filepath))
+            {
+                Directory.CreateDirectory(Filepath);
+            }
+
+            //var base64Data = Regex.Match(request.ContractFile, @"data:image\/[a-zA-Z]+;base64,(?<data>.+)").Groups["data"].Value;
+            //var imageBytes = Convert.FromBase64String(request.ContractFile);
+            using (var ms = new MemoryStream(request.ContractFile))
+            {
+                var fileName = Guid.NewGuid().ToString() + ".pdf";
+                var filePath = Path.Combine(Filepath, fileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    ms.CopyTo(fileStream);
+
+                }
+                var datafile = GetContractPath(request.ContractId, fileName);
+                var contractItem = await _requestService.GetContractById(request.ContractId);
+                contractItem.ContractFile = datafile;
+
+                await _requestService.UpdateContractUser(contractItem);
+
+
+            }
+            var response = await _paymentService.PayContract(request.ContractId, request.Method, request.userId);
             return Ok(response);
+        }
+
+
+        private string GetContractFile(string code)
+        {
+            return this._webHostEnvironment.WebRootPath + "\\Upload\\contract\\" + code;
+        }
+ 
+
+        [NonAction]
+        private string GetContractPath(int contractId, string fileName)
+        {
+            string hosturl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+            return hosturl + "\\Upload\\contract\\" + contractId + "/" + fileName;
         }
 
         [HttpGet("PaymentCallback/{paymentId:int}")]
