@@ -54,6 +54,7 @@ builder.Services.AddSwaggerGen(c =>
 }
 );
 builder.Services.AddScoped<UserInterface,UserService>();
+
 builder.Services.AddScoped<IProductService,ProductService>();
 builder.Services.AddScoped<IOptionService, OptionService>();
 builder.Services.AddScoped<IImageService, ImageService>();
@@ -62,6 +63,7 @@ builder.Services.AddScoped<ProductModal>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IRequestService, RequestService>();
 builder.Services.AddScoped<IPaymentService,PaymentService>();
+builder.Services.AddScoped<IContractService, ContractService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IVnPayService, VnPayService>();
 builder.Services.AddDbContext<DB_SWDContext>();
