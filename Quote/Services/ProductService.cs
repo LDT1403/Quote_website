@@ -10,14 +10,14 @@ namespace Quote.Services
 {
     public class ProductService : IProductService
     {
-        private readonly IRepoBase<Product> _repo;
-        private readonly IRepoBase<Option> _repoOP;
+        private readonly IRepoBase<Models.Product> _repo;
+        private readonly IRepoBase<Models.Option> _repoOP;
         private readonly IRepoBase<Models.Image> _repoIM;
         private readonly IRepoBase<Category> _repoCategory;
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-public ProductService(IRepoBase<Product> repo, IRepoBase<Option> repoOP, IRepoBase<Models.Image> repoIM, IRepoBase<Category> repoCategory, IMapper mapper, IWebHostEnvironment webHostEnvironment)
+public ProductService(IRepoBase<Models.Product> repo, IRepoBase<Models.Option> repoOP, IRepoBase<Models.Image> repoIM, IRepoBase<Category> repoCategory, IMapper mapper, IWebHostEnvironment webHostEnvironment)
         {
             _repo = repo;
             _repoOP = repoOP;

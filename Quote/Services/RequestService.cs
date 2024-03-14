@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Azure.Core;
+using Quote.Interfaces.RepositoryInterface;
 using Quote.Interfaces.ServiceInterface;
 using Quote.Modal.request;
 using Quote.Models;
@@ -10,12 +11,12 @@ namespace Quote.Services
 {
     public class RequestService : IRequestService
     {
-        private readonly RequestRepository _repo;
-        private readonly ContractRepository _repoCt;
+        private readonly IRepoBase<Models.Request> _repo;
+        private readonly IRepoBase<Models.Contract> _repoCt;
 
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public RequestService(RequestRepository repo, ContractRepository repoCt, IMapper mapper, IWebHostEnvironment webHostEnvironment)
+        public RequestService(IRepoBase<Models.Request> repo, IRepoBase<Models.Contract> repoCt, IMapper mapper, IWebHostEnvironment webHostEnvironment)
         {
             _repo = repo;
             _repoCt = repoCt;

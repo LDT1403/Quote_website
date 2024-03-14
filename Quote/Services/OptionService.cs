@@ -1,4 +1,5 @@
-﻿using Quote.Interfaces.ServiceInterface;
+﻿using Quote.Interfaces.RepositoryInterface;
+using Quote.Interfaces.ServiceInterface;
 using Quote.Modal;
 using Quote.Models;
 using Quote.Repositorys;
@@ -7,9 +8,9 @@ namespace Quote.Services
 {
     public class OptionService : IOptionService
     {
-        private readonly OptionRepository _repo;
+        private readonly IRepoBase<Option> _repo;
 
-        public OptionService(OptionRepository repo)
+        public OptionService(IRepoBase<Option> repo)
         {
             _repo = repo;
         }

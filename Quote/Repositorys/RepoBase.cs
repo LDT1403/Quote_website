@@ -145,4 +145,3 @@ namespace Quote.Repositorys
 
     }
 }
-

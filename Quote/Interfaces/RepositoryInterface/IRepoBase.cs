@@ -11,7 +11,7 @@
         Task<T> DeleteAsync(T entity);
         Task<bool> DeleteItemAsync(int id);
         IQueryable<T> GetInclude(params string[] navigationProperties);
-        Task Save();
+        System.Threading.Tasks.Task Save();
     }
 
 }

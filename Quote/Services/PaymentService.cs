@@ -1,19 +1,21 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using Quote.Interfaces.RepositoryInterface;
 using Quote.Interfaces.ServiceInterface;
 using Quote.Modal;
 using Quote.Models;
 using Quote.Repositorys;
+using System.Globalization;
 
 namespace Quote.Services
 {
     public class PaymentService : IPaymentService
     {
-        private readonly PaymentRepository _repoPay;
-        private readonly ContractRepository _repoCont;
+        private readonly IRepoBase<Payment> _repoPay;
+        private readonly IRepoBase<Models.Contract> _repoCont;
         private readonly IVnPayService _serviceVnPay;
 
-        public PaymentService(PaymentRepository repoPay, ContractRepository repoCont, IVnPayService vnPayService )
+        public PaymentService(IRepoBase<Payment> repoPay, IRepoBase<Models.Contract> repoCont, IVnPayService vnPayService )
         {
             _repoPay = repoPay;
             _repoCont = repoCont;
@@ -58,6 +60,76 @@ namespace Quote.Services
             };
             return payrespon;
         }
+
+        public async Task<List<RevernueRespone>> RevernueByYear()
+        {
+            try
+            {
+                List<RevernueRespone> monthlyProfits = new List<RevernueRespone>();
+
+                for (int i = 1; i <= 12; i++)
+                {
+                    RevernueRespone profit = new RevernueRespone();
+                    double totalMoney = 0;
+                    var payments = await _repoPay.GetAllAsync();
+
+                    foreach (var payment in payments)
+                    {
+                        var mm = payment?.DatePay.Value.Month;
+                        var yy = payment?.DatePay.Value.Year;
+                        if (mm == i && yy == DateTime.Now.Year)
+                        {
+                            totalMoney += double.Parse(payment.PricePay);
+                        }
+                    }
+
+                    profit.Month = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i).Substring(0, 3);
+                    profit.Revernue = totalMoney.ToString();
+                    monthlyProfits.Add(profit);
+                }
+
+                return monthlyProfits;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<double> TotalMoney()
+        {
+            try
+            {
+                double totalMoney = 0;
+                var items = await _repoPay.GetAllAsync();
+                foreach (var item1 in items)
+                {
+                    totalMoney += double.Parse(item1.PricePay);
+                    
+                }
+                return totalMoney;
+
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<List<Payment>> GetAllPay()
+        {
+            try
+            {
+                var payment = await _repoPay.GetAllAsync();
+                return payment;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
 
         public async System.Threading.Tasks.Task UpdatePay(Payment payment)
         {
