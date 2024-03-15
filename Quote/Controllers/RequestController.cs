@@ -34,10 +34,7 @@ namespace Quote.Controllers
         public async Task<ActionResult<Request>> CreateRequest([FromBody] CreateRequestModel requestdata)
         {
 
-            if (requestdata.UserId == null)
-            {
-                return Unauthorized();
-            }
+            
             var request = new Request
             {
                 Address = requestdata.Address,
@@ -51,6 +48,7 @@ namespace Quote.Controllers
                 DateCre = DateTime.Now,
             };
             var requestItem = await _requestService.CreateRequestUser(request);
+         
             var productItem = await _productService.GetProductId((int)requestItem.ProductId);
             var toEmail = requestItem.Email;
 
@@ -372,29 +370,22 @@ namespace Quote.Controllers
         {
             try
             {
-                var user = await _userInterface.GetUserIDAsync(staffId);
-                if(user == null)
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    user.Status = "1";
-                    await _userInterface.UpdateStatusStaff(user);
-                }
+                var staff = await _userInterface.GetUserIDAsync(staffId);
+               
+                    staff.Status = "1";
+                    await _userInterface.UpdateStatusStaff(staff);
+                
                 var request = await _requestService.Appoinment(requestId);
-                if (request == null)
-                {
-                    return NotFound();
+               
+                   
 
-                }
+                
                 Models.Task newTask = new Models.Task();
                 newTask.RequestId = request.RequestId; ;
                 newTask.UserId = staffId;
                 newTask.Status = "1";
                 newTask.Location = request.Address;
-                var item = await _taskInterface.CreateTasks(newTask);
-                var staff = await _userInterface.GetUserIDAsync((int)item.UserId);
+                var item = await _taskInterface.CreateTasks(newTask);             
                 var dataPro = await _productService.GetProductId((int)request.ProductId);
                 var toEmail = request.Email;
                 var emailBody = $@"<div><h3>THÔNG TIN LỊCH KHẢO SÁT </h3> 

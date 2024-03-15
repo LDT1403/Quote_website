@@ -49,15 +49,10 @@ namespace Quote.Services
             {
                 var list = await _repo.GetAllAsync();
 
-                if (list != null)
-                {
+                
                     list = list.Where(p => p.ManagerId == staffid && p.Status == "0").ToList();
                     return list;
-                }
-                else
-                {
-                    return null;
-                }
+             
 
             }
             catch (Exception ex)

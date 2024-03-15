@@ -36,6 +36,8 @@ namespace Quote.Controllers
            
 
 
+            
+            var response = await _paymentService.PayContract(request.ContractId, request.Method, request.userId);
             string Filepath = GetContractFile(request.ContractId.ToString());
             if (!Directory.Exists(Filepath))
             {
@@ -61,7 +63,6 @@ namespace Quote.Controllers
 
 
             }
-            var response = await _paymentService.PayContract(request.ContractId, request.Method, request.userId);
             return Ok(response);
         }
 
@@ -76,7 +77,7 @@ namespace Quote.Controllers
         private string GetContractPath(int contractId, string fileName)
         {
             string hosturl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
-            return hosturl + "//Upload\\contract//" + contractId + "/" + fileName;
+            return hosturl + "//Upload//contract//" + contractId + "/" + fileName;
         }
 
         [HttpGet("PaymentCallback/{paymentId:int}")]

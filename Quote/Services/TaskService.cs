@@ -16,11 +16,9 @@ namespace Quote.Services
         public async Task<Models.Task> CreateTasks(Models.Task task)
         {
             var item = await _repo.AddReturnAsync(task);
-            if(item != null)
-            {
+           
                 return item;
-            }
-            return null;
+          ;
            
         }
 

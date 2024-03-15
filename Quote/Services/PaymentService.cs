@@ -38,13 +38,17 @@ namespace Quote.Services
         public async Task<PaymentResponse> PayContract(int ContractId, string method,int userId)
         {
             var contract = await _repoCont.GetByIdAsync((int)ContractId);
-            var pricePay = ((int.Parse(contract.FinalPrice)) + (int.Parse(contract.ConPrice))) * 0.3;
+            double pricePay = ((int.Parse(contract.FinalPrice)) + (int.Parse(contract.ConPrice))) * 0.3;
+
+            // Tính phần payPrice chỉ lấy phần nguyên
+            int payPrice = (int)Math.Floor(pricePay);
+
             var paymentdata = new Payment()
             {
                 ContractId = contract.ContractId,
                 Method = method,
                 DatePay = DateTime.Now,
-                PricePay = pricePay.ToString(),
+                PricePay = payPrice.ToString(),
                 UserId = userId,
             };
             var payment = await _repoPay.AddReturnAsync(paymentdata);

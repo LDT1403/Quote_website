@@ -20,6 +20,7 @@ namespace Quote.Controllers
 
         public AdminController(IRequestService requestService, UserInterface userInterface, ITaskInterface taskInterface, IContractService contractService, IPaymentService paymentService, IWebHostEnvironment webHostEnvironment)
 
+
         {
             _webHostEnvironment = webHostEnvironment;
             _requestService = requestService;
