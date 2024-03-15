@@ -174,6 +174,7 @@ namespace Quote.Services
                     }
                 }
                 user.Role = "ST";
+                user.Status = "0";
                 await _repo.AddAsync(user);
                 return user;
             }
