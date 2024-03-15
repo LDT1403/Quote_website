@@ -38,7 +38,7 @@ namespace Quote.Services
         public async Task<PaymentResponse> PayContract(int ContractId, string method,int userId)
         {
             var contract = await _repoCont.GetByIdAsync((int)ContractId);
-            var pricePay = ((int.Parse(contract.FinalPrice)) + (int.Parse(contract.ConPrice))) * 30/100;
+            var pricePay = ((int.Parse(contract.FinalPrice)) + (int.Parse(contract.ConPrice))) * 0.3;
             var paymentdata = new Payment()
             {
                 ContractId = contract.ContractId,
@@ -72,6 +72,7 @@ namespace Quote.Services
                     RevernueRespone profit = new RevernueRespone();
                     double totalMoney = 0;
                     var payments = await _repoPay.GetAllAsync();
+                    payments =payments.Where(p=>p.Status == "1").ToList();
 
                     foreach (var payment in payments)
                     {
@@ -102,6 +103,7 @@ namespace Quote.Services
             {
                 double totalMoney = 0;
                 var items = await _repoPay.GetAllAsync();
+                items =items.Where(p => p.Status == "1").ToList();
                 foreach (var item1 in items)
                 {
                     totalMoney += double.Parse(item1.PricePay);

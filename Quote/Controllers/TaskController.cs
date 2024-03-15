@@ -98,6 +98,7 @@ namespace Quote.Controllers
                 ConPrice = Contractdata.ConPrice,
                 FinalPrice = Contractdata.FinalPrice,
                 Status = Contractdata.Status,
+                Date = DateTime.Now,
             };
 
             var contractres = await _requestService.CreateContractUser(contract);
