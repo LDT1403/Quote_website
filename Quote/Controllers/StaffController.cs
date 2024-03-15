@@ -36,7 +36,7 @@ namespace Quote.Controllers
         }
 
         [HttpPost("AddProduct")]
-        public async Task<IActionResult> CreateProduct([FromBody] ProductModal product)
+        public async Task<IActionResult> AddProduct([FromBody] ProductModal product)
         {
             ApiResponse res = new ApiResponse();
             try
@@ -100,7 +100,7 @@ namespace Quote.Controllers
                 res.Errormessage = ex.Message;
             }
 
-            return Ok();
+            return Ok("Success");
         }
 
         [HttpGet("GetAllProduct")]
