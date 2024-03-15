@@ -37,14 +37,10 @@ namespace Quote.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        /*[HttpGet("GetStaff")]
-        public async Task<IActionResult> GetStaff()
-        {
-            return null;
-        }*/
+
 
         [HttpPut("AddStaff")]
-        public async Task<IActionResult> AddStaff([FromBody]  StaffModal staff)
+        public async Task<IActionResult> AddStaff([FromBody] StaffModal staff)
         {
             try
             {
@@ -54,14 +50,16 @@ namespace Quote.Controllers
                     Phone = staff.Phone,
                     UserName = staff.UserName,
                     Position = staff.Position,
+                    Image = staff.Image,
                 };
                 var item = await _userInterface.RegisterStaffAsync(satff);
-                if(item == null)
+                if (item == null)
                 {
                     return Ok("Email đã tồn tại");
                 }
                 return Ok("Success");
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -69,8 +67,9 @@ namespace Quote.Controllers
         [HttpPost("ConfirmContract")]
         public async Task<IActionResult> ConfirmContract(int contractId)
         {
-            try {
-                
+            try
+            {
+
                 var contract = await _requestService.GetContractById(contractId);
                 contract.Status = "2";
                 await _requestService.UpdateContractUser(contract);
@@ -79,14 +78,41 @@ namespace Quote.Controllers
                 await _requestService.UpdateRequestUser(request);
                 var task = await _taskInterface.GetTasks();
                 var taskList = task.ToList().Where(t => t.RequestId == request.RequestId).FirstOrDefault();
-                taskList.Status="2";
-                return Ok("Success"); 
+                taskList.Status = "2";
+                return Ok("Success");
             }
-            catch (Exception ex) 
-            { 
-                return BadRequest(ex.Message); 
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
 
+        }
+        [HttpGet("GetAllStaff")]
+        public async Task<IActionResult> GetAllUser()
+        {
+            try
+            {
+                var alllUser = await _userInterface.GetUsersAsync();
+                var userList = alllUser.Where(user => user.Role == "ST")
+                               .Select(user => new StaffModal
+                               {
+                                   UserName = user.UserName,
+                                   Email = user.Email,
+                                   Phone = user.Phone,
+                                   Position = user.Position,
+                                   Image = user.Image,
+                                   IsDelete = user.IsDelete
+                                   
+                               })
+                               .ToList();
+
+                return Ok(userList);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
     }

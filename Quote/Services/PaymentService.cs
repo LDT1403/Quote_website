@@ -36,7 +36,7 @@ namespace Quote.Services
 
         public async Task<PaymentResponse> PayContract(int ContractId, string method,int userId)
         {
-            var contract = await _repoCont.GetByIdAsync((int)ContractId);
+            var contract = await _repoCont.GetByIdAsync(ContractId);
             var pricePay = ((int.Parse(contract.FinalPrice)) + (int.Parse(contract.ConPrice))) * 30/100;
             var paymentdata = new Payment()
             {

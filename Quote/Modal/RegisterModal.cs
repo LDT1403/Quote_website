@@ -26,6 +26,7 @@
         public string Phone { get; set; }
         public int? managerId { get; set; }
         public string Position { get; set; }
-
+        public bool? IsDelete { get; set; }
+        public string Image { get; set; }
     }
 }

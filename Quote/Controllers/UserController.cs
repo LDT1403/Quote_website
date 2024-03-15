@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Quote.Interfaces.ServiceInterface;
 using Quote.Modal;
 using Quote.Models;
+using Quote.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -14,7 +15,7 @@ using System.Text;
 namespace Quote.Controllers
 {
     [Route("api/[controller]")]
-  
+
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -27,7 +28,7 @@ namespace Quote.Controllers
             _userService = userService;
             _configuration = configuration;
         }
-        
+
         [HttpGet("UserInfo")]
         public async Task<IActionResult> GetUser(int userId)
         {
@@ -41,7 +42,7 @@ namespace Quote.Controllers
                     Phone = users.Phone,
                     Position = users.Position,
                     Images = users.Image,
-                    Date = users.Dob  
+                    Date = users.Dob
                 };
                 return Ok(userInfo);
             }
@@ -51,7 +52,7 @@ namespace Quote.Controllers
             }
         }
 
-     
+
 
         [AllowAnonymous]
         [HttpPost("login")]
@@ -135,7 +136,7 @@ namespace Quote.Controllers
         }
         [HttpPost]
         [Route("logout")]
-     
+
         public async Task<IActionResult> Logout()
         {
             var userClaims = User.Claims.ToList();
@@ -160,21 +161,21 @@ namespace Quote.Controllers
 
                 foreach (var user in list)
                 {
-                    StaffResponse staff =new StaffResponse();
-                     staff.UserName = user.UserName;
+                    StaffResponse staff = new StaffResponse();
+                    staff.UserName = user.UserName;
                     staff.UserId = user.UserId;
                     staff.UserName = user.UserName;
                     staff.Phone = user.Phone;
                     staff.Email = user.Email;
-                    staff.Status =user.Status;
+                    staff.Status = user.Status;
                     staff.Dob = user.Dob;
                     users.Add(staff);
                 }
-               
-                return Ok(users);
-               
 
-            }catch(Exception ex)
+                return Ok(users);
+
+
+            } catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -204,11 +205,36 @@ namespace Quote.Controllers
                 return Ok(users);
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet("GetAllUser")]
+        public async Task<IActionResult> GetAllUser()
+        {
+            try
+            {
+                var alllUser = await _userService.GetUsersAsync();
+                var userList = alllUser.Where(user => user.Role == "CUS") 
+                               .Select(user => new UserInfoModal
+                               {
+                                   UserName = user.UserName,
+                                   Email = user.Email,
+                                   Phone = user.Phone,
+                                   Position = user.Position,
+                                   Images = user.Image
+                               })
+                               .ToList();
 
+                return Ok(userList);
+
+            }
+              
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
