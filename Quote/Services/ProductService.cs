@@ -17,7 +17,7 @@ namespace Quote.Services
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-public ProductService(IRepoBase<Models.Product> repo, IRepoBase<Models.Option> repoOP, IRepoBase<Models.Image> repoIM, IRepoBase<Category> repoCategory, IMapper mapper, IWebHostEnvironment webHostEnvironment)
+        public ProductService(IRepoBase<Models.Product> repo, IRepoBase<Models.Option> repoOP, IRepoBase<Models.Image> repoIM, IRepoBase<Category> repoCategory, IMapper mapper, IWebHostEnvironment webHostEnvironment)
         {
             _repo = repo;
             _repoOP = repoOP;
@@ -32,11 +32,11 @@ public ProductService(IRepoBase<Models.Product> repo, IRepoBase<Models.Option> r
             return this._webHostEnvironment.WebRootPath + "\\Upload\\product\\" + code;
         }
 
-        public async Task<int> AddProduct(Product product)
-        {       
+        public async Task<int> AddProduct(Models.Product product)
+        {
             try
             {
-                
+
                 await _repo.AddAsync(product);
                 return product.ProductId;
             }
@@ -47,7 +47,7 @@ public ProductService(IRepoBase<Models.Product> repo, IRepoBase<Models.Option> r
 
         }
 
-        
+
 
         //public async Task<List<Image>> GetImageAsync()
         //{
@@ -97,18 +97,14 @@ public ProductService(IRepoBase<Models.Product> repo, IRepoBase<Models.Option> r
             }
         }
 
-        public async Task<Product> DeleteProduct(int id)
+        public async System.Threading.Tasks.Task DeleteProduct(int id)
         {
             try
             {
-               var product =  await _repo.GetByIdAsync(id);
-                if (product != null)
-                {
-                    product.IsDelete = true;
-                    var pro =  await _repo.UpdateAsync(product);
-                    return pro;
-                }
-                return null;
+                var product = await _repo.GetByIdAsync(id);
+
+                product.IsDelete = true;
+                await _repo.UpdateAsync(product);
             }
             catch (Exception ex)
             {
@@ -127,7 +123,7 @@ public ProductService(IRepoBase<Models.Product> repo, IRepoBase<Models.Option> r
                     pro.ProductName = product.ProductName;
                     pro.CategoryId = product.CategoryId;
                     pro.Description = product.Description;
-                    var newpro = await _repo.UpdateAsync(pro);         
+                    var newpro = await _repo.UpdateAsync(pro);
                     return newpro;
                 }
                 return null;
@@ -157,20 +153,20 @@ public ProductService(IRepoBase<Models.Product> repo, IRepoBase<Models.Option> r
         public async Task<List<Product>> GetAllProduct()
         {
             var listPro = await _repo.GetAllAsync();
-            if(listPro != null)
+            if (listPro != null)
             {
                 listPro = listPro.Where(p => p.IsDelete != true).ToList();
                 return listPro;
             }
             return null;
-            
+
         }
 
         public async Task<Product> GetProductId(int id)
         {
             var pro = await _repo.GetByIdAsync(id);
 
-             if(pro != null)
+            if (pro != null)
             {
                 return pro;
             }

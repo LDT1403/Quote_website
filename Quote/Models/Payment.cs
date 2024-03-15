@@ -21,6 +21,12 @@ public partial class Payment
 
     public int? UserId { get; set; }
 
+    public string TransactionCode { get; set; }
+
+    public string ResponseCode { get; set; }
+
+    public string TransactionNo { get; set; }
+
     public virtual Contract Contract { get; set; }
 
     public virtual User User { get; set; }

@@ -69,7 +69,7 @@ namespace Quote.Controllers
                         using (var fileStream = new FileStream(filePath, FileMode.Create))
                         {
                             ms.CopyTo(fileStream);
-                           
+
                         }
                         var img = new Models.Image()
                         {
@@ -109,7 +109,7 @@ namespace Quote.Controllers
             try
             {
                 var allPro = await _productService.GetAllProduct();
-                
+
                 var productWithCate = new List<ProductAllResponse>();
                 foreach (var cate in allPro)
                 {
@@ -152,7 +152,8 @@ namespace Quote.Controllers
                 }
                 return BadRequest();
 
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -174,13 +175,11 @@ namespace Quote.Controllers
         [HttpDelete("Delete_Product")]
         public async Task<IActionResult> DeleteProduct(int productId)
         {
-            var pro = await _productService.DeleteProduct(productId);
-            if (pro != null)
-            {
-                return Ok("Delete Product Success");
+            await _productService.DeleteProduct(productId);
 
-            }
-            else { return BadRequest(); }
+            return Ok("Delete Product Success");
+
+
 
         }
 
@@ -238,35 +237,35 @@ namespace Quote.Controllers
         //                        Description = product.Description,
         //                        ImagePath = GetImageProductPath(pro.ProductId, file.FileName),
 
-                //            };
-                //            string imagepath = Path.Combine(Filepath, file.FileName);
-                //            if (System.IO.File.Exists(imagepath))
-                //            {
-                //                System.IO.File.Delete(imagepath);
-                //            }
-                //            using (FileStream stream = System.IO.File.Create(imagepath))
-                //            {
-                //                await file.CopyToAsync(stream);
-                //                passcount++;
-                //            }
-                //            await _imageService.AddImage(img);
-                //            imageCount++;
-                //        }
-                //        res.Result = "Update Success";
-                //    }
-                //}
-                //        }
-                //        catch (Exception ex)
-                //        {
-                //            errorcount++;
-                //            res.Errormessage = ex.Message;
-                //        }
-                //        res.ResponseCode = 200;
+        //            };
+        //            string imagepath = Path.Combine(Filepath, file.FileName);
+        //            if (System.IO.File.Exists(imagepath))
+        //            {
+        //                System.IO.File.Delete(imagepath);
+        //            }
+        //            using (FileStream stream = System.IO.File.Create(imagepath))
+        //            {
+        //                await file.CopyToAsync(stream);
+        //                passcount++;
+        //            }
+        //            await _imageService.AddImage(img);
+        //            imageCount++;
+        //        }
+        //        res.Result = "Update Success";
+        //    }
+        //}
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            errorcount++;
+        //            res.Errormessage = ex.Message;
+        //        }
+        //        res.ResponseCode = 200;
 
 
-                //        return Ok(res);
-                    
-                    
-    }  
+        //        return Ok(res);
+
+
+    }
 
 }
