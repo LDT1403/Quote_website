@@ -12,13 +12,14 @@ namespace Quote.Controllers
     {
         private readonly ITaskInterface _taskService;
         private readonly IRequestService _requestService;
-      
+        private readonly UserInterface _userInterface;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public TaskController(ITaskInterface taskService, IRequestService requestService, IWebHostEnvironment webHostEnvironment )
+        public TaskController(ITaskInterface taskService, IRequestService requestService,UserInterface userInterface,  IWebHostEnvironment webHostEnvironment )
         {
             _taskService = taskService;
             _requestService = requestService;
+            _userInterface = userInterface;
             _webHostEnvironment = webHostEnvironment;
         }
         [HttpGet("GetAllTask")]
@@ -90,7 +91,9 @@ namespace Quote.Controllers
             var task = await _taskService.GetTaskById(Contractdata.taskId);
             task.Status = "2";
              await _taskService.UpdateTasks(task);
-
+            var staffUser = await _userInterface.GetUserIDAsync((int)task.UserId);
+            staffUser.Status = "0";
+            await _userInterface.UpdateStatusStaff(staffUser);
 
             var contract = new Models.Contract
             {

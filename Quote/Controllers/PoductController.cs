@@ -67,11 +67,11 @@ namespace Quote.Controllers
                 var product = new List<Product>();
                 if (Idcategory == 10)
                 {
-                    product = _productService.GetProductAsync().Result.Where(p => (p.CategoryId == 1 && p.CategoryId  == 2 ) && p.IsDelete == false).ToList();
+                    product = _productService.GetProductAsync().Result.Where(p => (p.CategoryId == 1 || p.CategoryId  == 2 ) && p.IsDelete == false).ToList();
                 }else
                 if (Idcategory == 11)
                 {
-                    product = _productService.GetProductAsync().Result.Where(p => (p.CategoryId == 3 && p.CategoryId == 4 && p.CategoryId==5) && p.IsDelete == false).ToList();
+                    product = _productService.GetProductAsync().Result.Where(p => (p.CategoryId == 3 || p.CategoryId == 4 || p.CategoryId==5) && p.IsDelete == false).ToList();
                 }
                 else
                 if (Idcategory != 11 && Idcategory != 10)

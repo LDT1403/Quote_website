@@ -117,16 +117,14 @@ namespace Quote.Services
             try
             {
                 var pro = await _repo.GetByIdAsync(id);
-                if (pro != null)
-                {
+               
                     pro.Price = product.Price;
                     pro.ProductName = product.ProductName;
                     pro.CategoryId = product.CategoryId;
                     pro.Description = product.Description;
                     var newpro = await _repo.UpdateAsync(pro);
                     return newpro;
-                }
-                return null;
+              
             }
             catch (Exception ex)
             {
@@ -153,12 +151,10 @@ namespace Quote.Services
         public async Task<List<Product>> GetAllProduct()
         {
             var listPro = await _repo.GetAllAsync();
-            if (listPro != null)
-            {
+           
                 listPro = listPro.Where(p => p.IsDelete != true).ToList();
                 return listPro;
-            }
-            return null;
+            
 
         }
 
@@ -166,22 +162,18 @@ namespace Quote.Services
         {
             var pro = await _repo.GetByIdAsync(id);
 
-            if (pro != null)
-            {
+            
                 return pro;
-            }
-            return null;
+            
         }
 
         public async Task<Category> GetCategoryIdAsync(int cartId)
         {
             var cate = await _repoCategory.GetByIdAsync(cartId);
 
-            if (cate != null)
-            {
+           
                 return cate;
-            }
-            return null;
+           
         }
     }
 }
