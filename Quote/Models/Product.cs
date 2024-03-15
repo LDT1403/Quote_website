@@ -19,7 +19,9 @@ public partial class Product
 
     public bool? IsDelete { get; set; }
 
-    public virtual ICollection<CartDetail> CartDetails { get; set; } = new List<CartDetail>();
+    public int? QuantitySold { get; set; }
+
+    public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
     public virtual Category Category { get; set; }
 

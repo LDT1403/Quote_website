@@ -9,7 +9,7 @@
         public string Address { set; get; }
         public string Email {  set; get; }
         public string Date { set; get; }
-
+        public string Status { set; get; }
 
     }
 }

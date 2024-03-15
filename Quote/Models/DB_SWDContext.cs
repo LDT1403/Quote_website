@@ -19,8 +19,6 @@ public partial class DB_SWDContext : DbContext
 
     public virtual DbSet<Cart> Carts { get; set; }
 
-    public virtual DbSet<CartDetail> CartDetails { get; set; }
-
     public virtual DbSet<Category> Categories { get; set; }
 
     public virtual DbSet<Contract> Contracts { get; set; }
@@ -44,7 +42,6 @@ public partial class DB_SWDContext : DbContext
     public virtual DbSet<Token> Tokens { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
@@ -58,31 +55,23 @@ public partial class DB_SWDContext : DbContext
         }
     }
 
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Cart>(entity =>
         {
+            entity.HasKey(e => e.CartDetailId).HasName("PK_CartDetail");
+
             entity.ToTable("Cart");
 
-            entity.HasIndex(e => e.UserId, "UQ__Cart__1788CC4D074D1412").IsUnique();
-
-            entity.HasOne(d => d.User).WithOne(p => p.Cart)
-                .HasForeignKey<Cart>(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Cart_Users");
-        });
-
-        modelBuilder.Entity<CartDetail>(entity =>
-        {
-            entity.ToTable("CartDetail");
-
-            entity.HasOne(d => d.Cart).WithMany(p => p.CartDetails)
-                .HasForeignKey(d => d.CartId)
-                .HasConstraintName("FK_CartDetail_Cart");
-
-            entity.HasOne(d => d.Product).WithMany(p => p.CartDetails)
+            entity.HasOne(d => d.Product).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.ProductId)
                 .HasConstraintName("FK_CartDetail_Product");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Carts)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Cart_Users");
         });
 
         modelBuilder.Entity<Category>(entity =>
@@ -150,10 +139,13 @@ public partial class DB_SWDContext : DbContext
         {
             entity.ToTable("Payment");
 
-            entity.Property(e => e.DatePay).HasColumnType("date");
+            entity.Property(e => e.DatePay).HasColumnType("datetime");
             entity.Property(e => e.Method).HasMaxLength(250);
             entity.Property(e => e.PricePay).HasMaxLength(50);
+            entity.Property(e => e.ResponseCode).HasMaxLength(500);
             entity.Property(e => e.Status).HasMaxLength(500);
+            entity.Property(e => e.TransactionCode).HasMaxLength(500);
+            entity.Property(e => e.TransactionNo).HasMaxLength(500);
 
             entity.HasOne(d => d.Contract).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.ContractId)

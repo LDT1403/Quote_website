@@ -5,11 +5,9 @@ namespace Quote.Interfaces.ServiceInterface
 {
     public interface ICartService
     {
-        Task<List<CartDetail>> GetCartsAsync();
-        Task<CartDetail> AddCartAsync(CartDetail cartDetail);
-        Task<List<Cart>> GetCartAsync();
-        Task<Cart> CreateCartOfUser(Cart cart);
-
+        Task<List<Cart>> GetCartsAsync();
+        Task<Cart> AddCartAsync(Cart cartDetail);
+        Task<Cart> GetCartIdAsync(int cartDetailId);
         Task<Boolean> DeleteCartDetail(int cartDetialID);
 
     }
