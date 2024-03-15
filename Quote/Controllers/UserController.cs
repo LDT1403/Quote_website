@@ -14,7 +14,7 @@ using System.Text;
 namespace Quote.Controllers
 {
     [Route("api/[controller]")]
-  
+
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -27,7 +27,7 @@ namespace Quote.Controllers
             _userService = userService;
             _configuration = configuration;
         }
-        
+
         [HttpGet("UserInfo")]
         public async Task<IActionResult> GetUser(int userId)
         {
@@ -41,7 +41,7 @@ namespace Quote.Controllers
                     Phone = users.Phone,
                     Position = users.Position,
                     Images = users.Image,
-                    Date = users.Dob  
+                    Date = users.Dob
                 };
                 return Ok(userInfo);
             }
@@ -51,7 +51,7 @@ namespace Quote.Controllers
             }
         }
 
-     
+
 
         [AllowAnonymous]
         [HttpPost("login")]
@@ -81,6 +81,38 @@ namespace Quote.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error: {ex.Message}");
             }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("LoginGoogle")]
+        public async Task<IActionResult> LoginGoogle([FromBody] LoginGoogleModal user)
+        {
+            var _user = await _userService.GetUsersAsync();
+            var _userData = _user.Where(p => p.Email == user.email && p.Position == "Người Dùng Google").FirstOrDefault();
+
+            if (_userData == null)
+            {
+                var userNew = new RegisterGoogle
+                {
+                    Email = user.email,
+                    Image = user.picture,
+                    UserName = user.name,
+
+                };
+                var useData = await _userService.AddUserByGoogle(userNew);
+                var useRes = new ResgoogoleModal
+                {
+                    email = useData.Email,
+                    password = useData.Password
+                };
+                return Ok(useRes);
+            }
+            var useResSS = new ResgoogoleModal
+            {
+                email = _userData.Email,
+                password = _userData.Password
+            };
+            return Ok(useResSS);
         }
 
         private string GenerateToken(User user)
@@ -135,7 +167,7 @@ namespace Quote.Controllers
         }
         [HttpPost]
         [Route("logout")]
-     
+
         public async Task<IActionResult> Logout()
         {
             var userClaims = User.Claims.ToList();
@@ -160,21 +192,22 @@ namespace Quote.Controllers
 
                 foreach (var user in list)
                 {
-                    StaffResponse staff =new StaffResponse();
-                     staff.UserName = user.UserName;
+                    StaffResponse staff = new StaffResponse();
+                    staff.UserName = user.UserName;
                     staff.UserId = user.UserId;
                     staff.UserName = user.UserName;
                     staff.Phone = user.Phone;
                     staff.Email = user.Email;
-                    staff.Status =user.Status;
+                    staff.Status = user.Status;
                     staff.Dob = user.Dob;
                     users.Add(staff);
                 }
-               
-                return Ok(users);
-               
 
-            }catch(Exception ex)
+                return Ok(users);
+
+
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -204,7 +237,7 @@ namespace Quote.Controllers
                 return Ok(users);
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

@@ -8,4 +8,11 @@
 
         public object Data { get; set; }
     }
+    public class ResgoogoleModal
+    {
+       
+        public string email { get; set; }
+
+        public string password { get; set; }
+    }
 }

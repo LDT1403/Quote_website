@@ -8,6 +8,7 @@ namespace Quote.Helper
     {
         public AutoMapperHandler() {
             CreateMap<User, RegisterModal>().ReverseMap();
+            CreateMap<User, RegisterGoogle>().ReverseMap();
             CreateMap<Product, ProductModal>().ReverseMap();
 
             CreateMap<NotificationModal, Notification>().ReverseMap();
