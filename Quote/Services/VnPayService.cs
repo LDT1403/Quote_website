@@ -22,8 +22,8 @@ namespace Quote.Services
             var tick = DateTime.Now.Ticks.ToString();
             var pay = new VnPayLibrary();
             var urlCallBack = $"{_configuration["VnPay:CallbackUrl"]}/{payment.PaymentId}";
-            int multipliedPrice = int.Parse(payment.PricePay) *100;
-            string multipliedPriceString = multipliedPrice.ToString();
+            int multipliedPrice = int.Parse(payment.PricePay) ;
+            string multipliedPriceString = multipliedPrice.ToString()+"00";
             pay.AddRequestData("vnp_Version", _configuration["Vnpay:Version"]);
             pay.AddRequestData("vnp_Command", _configuration["Vnpay:Command"]);
             pay.AddRequestData("vnp_TmnCode", _configuration["Vnpay:TmnCode"]);

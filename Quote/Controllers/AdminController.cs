@@ -17,12 +17,13 @@ namespace Quote.Controllers
         private readonly IPaymentService _paymentService;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public AdminController(IRequestService requestService, UserInterface userInterface, IContractService contractService,IPaymentService paymentService)
+        public AdminController(IRequestService requestService, UserInterface userInterface, IContractService contractService,IPaymentService paymentService, IWebHostEnvironment webHostEnvironment)
         {
             _requestService = requestService;
             _userInterface = userInterface;
             _contractService = contractService;
             _paymentService = paymentService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet("GetTotalMoney")]
@@ -120,7 +121,7 @@ namespace Quote.Controllers
             }
         }
         [HttpPost("ConfirmContract")]
-        public async Task<IActionResult> ConfirmContract(ContractAdmin contractdata)
+        public async Task<IActionResult> ConfirmContract([FromForm]ContractAdmin contractdata)
         {
             try {
 
@@ -163,7 +164,7 @@ namespace Quote.Controllers
         }
         private string GetContractFileAdmin(string code)
         {
-            return this._webHostEnvironment.WebRootPath + "\\Upload\\contract\\" + code;
+            return this._webHostEnvironment.WebRootPath + "//Upload//contract//" + code;
         }
 
 
@@ -171,7 +172,7 @@ namespace Quote.Controllers
         private string GetContractPathAdmin(int contractId, string fileName)
         {
             string hosturl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
-            return hosturl + "\\Upload\\contract\\" + contractId + "/" + fileName;
+            return hosturl + "//Upload//contract//" + contractId + "/" + fileName;
         }
 
     }
