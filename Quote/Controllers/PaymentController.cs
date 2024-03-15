@@ -20,7 +20,7 @@ namespace Quote.Controllers
         private readonly IMailService _mailService;
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public PaymentController(IConfiguration configuration, IPaymentService paymentService, IMapper mapper, IRequestService requestService , IWebHostEnvironment webHostEnvironment)
+        public PaymentController(IConfiguration configuration, IPaymentService paymentService, IMapper mapper, IRequestService requestService , IWebHostEnvironment webHostEnvironment, IMailService mailService)
         {
             _configuration = configuration;
             _paymentService = paymentService;
