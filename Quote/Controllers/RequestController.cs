@@ -99,6 +99,7 @@ namespace Quote.Controllers
                             dateSurvey = item.Date.ToString(),
                             requestId = item.RequestId,
                             status = "Đang Xử Lí",
+                            dateCreate=item.DateCre,
                             UserData = new RequestUser
                             {
                                 userEmail = item.Email,
@@ -145,6 +146,7 @@ namespace Quote.Controllers
                             dateSurvey = item.Date.ToString(),
                             requestId = item.RequestId,
                             status = "Chờ Khảo Sát",
+                            dateCreate = item.DateCre,
                             UserData = new RequestUser
                             {
                                 userEmail = item.Email,
@@ -195,6 +197,7 @@ namespace Quote.Controllers
                             dateSurvey = item.Date.ToString(),
                             requestId = item.RequestId,
                             status = "Chờ Báo Giá",
+
                             UserData = new RequestUser
                             {
                                 userEmail = item.Email,
@@ -246,6 +249,7 @@ namespace Quote.Controllers
                             dateSurvey = item.Date.ToString(),
                             requestId = item.RequestId,
                             status = "Đã Báo Giá",
+                            dateCreate = item.DateCre,
                             UserData = new RequestUser
                             {
                                 userEmail = item.Email,

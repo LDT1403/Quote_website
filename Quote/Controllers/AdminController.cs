@@ -50,7 +50,22 @@ namespace Quote.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("Get5Contract")]
+        public async Task<IActionResult> Get5Contract()
+        {
+            try
+            {
+                var item = await _contractService.GetNewContract();
+                return Ok(item);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("GetRervenueByYear")]
         public async Task<IActionResult> GetRervenueByYear()
         {
             try
@@ -64,17 +79,15 @@ namespace Quote.Controllers
             }
         }
 
-
+      
         [HttpGet("GetContractAdmin")]
-        public async Task<IActionResult> GetContractAdmin(string status)
+        public async Task<IActionResult> GetContractAdmin()
         {
             try
             {
                 var list = await _requestService.GetContract();
-                var listResponse = list.Where(p => p.Status == status).ToList();
 
-
-                return Ok(listResponse);
+                return Ok(list);
             }
             catch (Exception ex)
             {
@@ -180,21 +193,40 @@ namespace Quote.Controllers
             }
         }
         [HttpPost("ConfirmContract")]
-        public async Task<IActionResult> ConfirmContract(int contractId)
+        public async Task<IActionResult> ConfirmContract([FromForm]ContractAdmin contractdata)
         {
-            try
-            {
+            try {
 
-                var contract = await _requestService.GetContractById(contractId);
-                contract.Status = "2";
-                await _requestService.UpdateContractUser(contract);
-                var request = await _requestService.GetRequestById((int)contract.RequestId);
-                request.Status = "4";
-                await _requestService.UpdateRequestUser(request);
-                var task = await _taskInterface.GetTasks();
-                var taskList = task.ToList().Where(t => t.RequestId == request.RequestId).FirstOrDefault();
-                taskList.Status = "2";
-                return Ok("Success");
+                string Filepath = GetContractFileAdmin(contractdata.contractId.ToString());
+                if (!Directory.Exists(Filepath))
+                {
+                    Directory.CreateDirectory(Filepath);
+                }
+
+                //var base64Data = Regex.Match(request.ContractFile, @"data:image\/[a-zA-Z]+;base64,(?<data>.+)").Groups["data"].Value;
+                //var imageBytes = Convert.FromBase64String(request.ContractFile);
+                using (var ms = new MemoryStream(contractdata.contractfile))
+                {
+                    var fileName = Guid.NewGuid().ToString() + ".pdf";
+                    var filePath = Path.Combine(Filepath, fileName);
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        ms.CopyTo(fileStream);
+
+                    }
+                    var datafile = GetContractPathAdmin(contractdata.contractId, fileName);
+                    var contracts = await _requestService.GetContractById((int)contractdata.contractId);
+                    contracts.Status = "2";
+                    contracts.ContractFile = datafile;
+                    await _requestService.UpdateContractUser(contracts);
+                    var requests = await _requestService.GetRequestById((int)contracts.RequestId);
+                    requests.Status = "4";
+                    await _requestService.UpdateRequestUser(requests);
+                    
+                }
+
+        
+                return Ok("Success"); 
             }
             catch (Exception ex)
             {
@@ -250,26 +282,20 @@ namespace Quote.Controllers
 
                 return Ok(userList);
 
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
         }
-        /*[HttpPut("UpdateBanStaff")]
-        public async Task<IActionResult> UpdateBanStaff(int staffId)
+        [NonAction]
+        private string GetContractFileAdmin(string code)
         {
-            try
-            {
-                var staff = await _userInterface.GetStaffByStatus(staffId);
+            return this._webHostEnvironment.WebRootPath + "//Upload//contract//" + code;
+        }
 
-                
-                return Ok("success");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }*/
+
+        [NonAction]
+        private string GetContractPathAdmin(int contractId, string fileName)
+        {
+            string hosturl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+            return hosturl + "//Upload//contract//" + contractId + "/" + fileName;
+        }
+
     }
 }

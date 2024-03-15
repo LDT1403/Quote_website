@@ -58,6 +58,7 @@ builder.Services.AddScoped<IProductService,ProductService>();
 builder.Services.AddScoped<IOptionService, OptionService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<ITaskInterface, TaskService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<ProductModal>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IRequestService, RequestService>();

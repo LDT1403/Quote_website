@@ -68,7 +68,7 @@ namespace Quote.Controllers
 
         private string GetContractFile(string code)
         {
-            return this._webHostEnvironment.WebRootPath + "\\Upload\\contract\\" + code;
+            return this._webHostEnvironment.WebRootPath + "//Upload//contract//" + code;
         }
  
 
@@ -76,7 +76,7 @@ namespace Quote.Controllers
         private string GetContractPath(int contractId, string fileName)
         {
             string hosturl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
-            return hosturl + "\\Upload\\contract\\" + contractId + "/" + fileName;
+            return hosturl + "//Upload\\contract//" + contractId + "/" + fileName;
         }
 
         [HttpGet("PaymentCallback/{paymentId:int}")]
