@@ -84,6 +84,38 @@ namespace Quote.Controllers
             }
         }
 
+        [AllowAnonymous]
+        [HttpPost("LoginGoogle")]
+        public async Task<IActionResult> LoginGoogle([FromBody] LoginGoogleModal user)
+        {
+            var _user = await _userService.GetUsersAsync();
+            var _userData = _user.Where(p => p.Email == user.email && p.Position == "Người Dùng Google").FirstOrDefault();
+
+            if (_userData == null)
+            {
+                var userNew = new RegisterGoogle
+                {
+                    Email = user.email,
+                    Image = user.picture,
+                    UserName = user.name,
+
+                };
+                var useData = await _userService.AddUserByGoogle(userNew);
+                var useRes = new ResgoogoleModal
+                {
+                    email = useData.Email,
+                    password = useData.Password
+                };
+                return Ok(useRes);
+            }
+            var useResSS = new ResgoogoleModal
+            {
+                email = _userData.Email,
+                password = _userData.Password
+            };
+            return Ok(useResSS);
+        }
+
         private string GenerateToken(User user)
         {
             var securitykey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:key"]));
@@ -175,7 +207,8 @@ namespace Quote.Controllers
                 return Ok(users);
 
 
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

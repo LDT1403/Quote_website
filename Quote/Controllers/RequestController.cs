@@ -48,6 +48,7 @@ namespace Quote.Controllers
                 UserId = requestdata.UserId,
                 Phone = requestdata.Phone,
                 UserName = requestdata.UserName,
+                DateCre = DateTime.Now,
             };
             var requestItem = await _requestService.CreateRequestUser(request);
             var productItem = await _productService.GetProductId((int)requestItem.ProductId);
@@ -129,16 +130,15 @@ namespace Quote.Controllers
                 {
                     var dataResponse = new List<RequestStatusResqonse>();
                     var list = await _requestService.GetAllRequest();
-                    var listRe = list.Where(r => r.UserId == data.Id && r.Status == data.Status).ToList();
+                    var listRe = list.Where(r => r.UserId == data.Id &&( r.Status == "2" || r.Status == "3") ).ToList();
                     foreach (var item in listRe)
                     {
                         var dataPro = await _productService.GetProductId((int)item.ProductId);
                         var proCate = await _productService.GetCategoryIdAsync((int)dataPro.CategoryId);
                         var proimg = await _productService.GetImageAsync();
                         var thumb = proimg.Where(i => i.ProductId == dataPro.ProductId).FirstOrDefault();
-                        var taskL = await _taskInterface.GetTasks();
-                        var taskData = taskL.Where(t => t.RequestId == item.RequestId && t.Status == "1").FirstOrDefault();
-                        var staff = await _userInterface.GetUserIDAsync((int)taskData.UserId);
+                        var taskL = _taskInterface.GetTasks().Result.Where(t => t.RequestId == item.RequestId).FirstOrDefault();
+                        var staff = await _userInterface.GetUserIDAsync((int)taskL.UserId);
                         var dataAdd = new RequestStatusResqonse
                         {
                             address = item.Address,
@@ -165,7 +165,7 @@ namespace Quote.Controllers
                                 staffEmail = staff.Email,
                                 staffName = staff.UserName,
                                 staffPhone = staff.Phone,
-                                staffId = (int)taskData.UserId
+                                staffId = (int)staff.UserId
                             },
                             ContracData = new RequestContrac(),
 
@@ -175,11 +175,11 @@ namespace Quote.Controllers
                     return Ok(dataResponse);
                 }
                 else
-                if (data.Status == "3")
+                if (data.Status == "0")
                 {
                     var dataResponse = new List<RequestStatusResqonse>();
                     var list = await _requestService.GetAllRequest();
-                    var listRe = list.Where(r => r.UserId == data.Id && r.Status == data.Status).ToList();
+                    var listRe = list.Where(r => r.UserId == data.Id).ToList();
                     foreach (var item in listRe)
                     {
                         var dataPro = await _productService.GetProductId((int)item.ProductId);

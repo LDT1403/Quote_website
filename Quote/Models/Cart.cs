@@ -7,11 +7,15 @@ namespace Quote.Models;
 
 public partial class Cart
 {
-    public int CartId { get; set; }
+    public int CartDetailId { get; set; }
+
+    public int? CartId { get; set; }
+
+    public int? ProductId { get; set; }
 
     public int UserId { get; set; }
 
-    public virtual ICollection<CartDetail> CartDetails { get; set; } = new List<CartDetail>();
+    public virtual Product Product { get; set; }
 
     public virtual User User { get; set; }
 }
