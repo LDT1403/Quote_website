@@ -17,7 +17,7 @@ namespace Quote.Controllers
         private readonly IPaymentService _paymentService;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public AdminController(IRequestService requestService, UserInterface userInterface, IContractService contractService,IPaymentService paymentService,IWebHostEnvironment webHostEnvironment)
+        public AdminController(IRequestService requestService, UserInterface userInterface, IContractService contractService,IPaymentService paymentService, IWebHostEnvironment webHostEnvironment)
         {
             _requestService = requestService;
             _userInterface = userInterface;
