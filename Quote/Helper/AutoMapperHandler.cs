@@ -10,8 +10,8 @@ namespace Quote.Helper
             CreateMap<User, RegisterModal>().ReverseMap();
             CreateMap<User, RegisterGoogle>().ReverseMap();
             CreateMap<Product, ProductModal>().ReverseMap();
-            
-           
+
+            CreateMap<NotificationModal, Notification>().ReverseMap();
         }
     }
 }
