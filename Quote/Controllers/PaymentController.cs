@@ -34,6 +34,8 @@ namespace Quote.Controllers
            
 
 
+            
+            var response = await _paymentService.PayContract(request.ContractId, request.Method, request.userId);
             string Filepath = GetContractFile(request.ContractId.ToString());
             if (!Directory.Exists(Filepath))
             {
@@ -59,7 +61,6 @@ namespace Quote.Controllers
 
 
             }
-            var response = await _paymentService.PayContract(request.ContractId, request.Method, request.userId);
             return Ok(response);
         }
 
