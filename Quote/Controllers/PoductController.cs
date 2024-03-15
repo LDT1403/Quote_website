@@ -92,7 +92,7 @@ namespace Quote.Controllers
                     var productCate = new ProductCateResponse
                     {
                         ProductId = cate.ProductId,
-                        ImagePath = img.ImagePath,
+                        ImagePath = img?.ImagePath,
                     };
                     productWithCate.Add(productCate);
                 }

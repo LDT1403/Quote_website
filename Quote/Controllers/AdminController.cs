@@ -121,6 +121,10 @@ namespace Quote.Controllers
                     Password = hr.Password,
                 };
                 var hrre = await _userInterface.RegisterStaffAsync(satff);
+                if(hrre == null)
+                {
+                    return Ok("Taì Khoản Đã Tồn Tại");
+                }
                 string Filepath = GetContractFile(hrre.UserId.ToString());
                 if (!Directory.Exists(Filepath))
                 {
@@ -146,7 +150,7 @@ namespace Quote.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest();
             }
         }
         [HttpPut("AddStaff")]
@@ -283,20 +287,25 @@ namespace Quote.Controllers
 
                 return Ok(userList);
 
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [NonAction]
-        private string GetContractFileAdmin(string code)
-        {
-            return this._webHostEnvironment.WebRootPath + "//Upload//contract//" + code;
-        }
+            private string GetContractFileAdmin(string code)
+            {
+                return this._webHostEnvironment.WebRootPath + "//Upload//contract//" + code;
+            }
 
 
-        [NonAction]
-        private string GetContractPathAdmin(int contractId, string fileName)
-        {
-            string hosturl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
-            return hosturl + "//Upload//contract//" + contractId + "/" + fileName;
-        }
-
+            [NonAction]
+            private string GetContractPathAdmin(int contractId, string fileName)
+            {
+                string hosturl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+                return hosturl + "//Upload//contract//" + contractId + "/" + fileName;
+            }
+        
     }
 }
