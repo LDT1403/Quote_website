@@ -162,6 +162,7 @@ namespace Quote.Controllers
             }
 
         }
+        [NonAction]
         private string GetContractFileAdmin(string code)
         {
             return this._webHostEnvironment.WebRootPath + "//Upload//contract//" + code;
