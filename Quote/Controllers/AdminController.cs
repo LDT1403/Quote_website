@@ -16,11 +16,12 @@ namespace Quote.Controllers
         private readonly IContractService _contractService;
         private readonly IPaymentService _paymentService;
 
-        public AdminController(IRequestService requestService, UserInterface userInterface, IContractService contractService)
+        public AdminController(IRequestService requestService, UserInterface userInterface, IContractService contractService,IPaymentService paymentService)
         {
             _requestService = requestService;
             _userInterface = userInterface;
             _contractService = contractService;
+            _paymentService = paymentService;
         }
 
         [HttpGet("GetTotalMoney")]
@@ -44,7 +45,22 @@ namespace Quote.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("Get5Contract")]
+        public async Task<IActionResult> Get5Contract()
+        {
+            try
+            {
+                var item = await _contractService.GetNewContract();
+                return Ok(item);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("GetRervenueByYear")]
         public async Task<IActionResult> GetRervenueByYear()
         {
             try
@@ -60,15 +76,13 @@ namespace Quote.Controllers
 
 
         [HttpGet("GetContractAdmin")]
-        public async Task<IActionResult> GetContractAdmin(string status)
+        public async Task<IActionResult> GetContractAdmin()
         {
             try
             {
                 var list = await _requestService.GetContract();
-                var listResponse = list.Where(p => p.Status == status).ToList();
 
-
-                return Ok(listResponse);
+                return Ok(list);
             }
             catch (Exception ex)
             {

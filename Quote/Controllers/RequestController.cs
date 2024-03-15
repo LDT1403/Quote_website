@@ -129,7 +129,7 @@ namespace Quote.Controllers
                 {
                     var dataResponse = new List<RequestStatusResqonse>();
                     var list = await _requestService.GetAllRequest();
-                    var listRe = list.Where(r => r.UserId == data.Id &&( r.Status == "2" && r.Status == "3") ).ToList();
+                    var listRe = list.Where(r => r.UserId == data.Id &&( r.Status == "2" || r.Status == "3") ).ToList();
                     foreach (var item in listRe)
                     {
                         var dataPro = await _productService.GetProductId((int)item.ProductId);

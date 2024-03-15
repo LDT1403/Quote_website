@@ -25,5 +25,20 @@ namespace Quote.Services
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<List<Contract>> GetNewContract()
+        {
+            try
+            {
+                var list = await _repo.GetAllAsync();
+                list =list.OrderByDescending(c=>c.Date).Take(5).ToList();
+                return list;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
