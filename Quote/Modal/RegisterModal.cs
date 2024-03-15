@@ -26,13 +26,36 @@
         public string Position { get; set; }
         public string? Date { get; set; }
     }
-    public class StaffModal
+    public class HRModal
     {
         public string UserName { get; set;}
         public string Email { get; set; }
         public string Phone { get; set; }
+        public string Position { get; set; }
+        public IFormFile Image { get; set; }
+        public string Password { get; set; }
+    }
+    public class StaffModal
+    {
+        public string UserName { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
+        public string Position { get; set; }
+        public IFormFile Image { get; set; }
+        public int ManageId { get; set; }
+
+        public string Password { get; set; }
+    }
+
+    public class StaffModalResponse
+    {
+        public int Id { get; set; }
+        public string UserName { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
         public int? managerId { get; set; }
         public string Position { get; set; }
-
+        public bool? IsDelete { get; set; }
+        public string Image { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Quote.Interfaces.ServiceInterface;
 using Quote.Modal;
 using Quote.Models;
+using Quote.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -242,6 +243,31 @@ namespace Quote.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet("GetAllUser")]
+        public async Task<IActionResult> GetAllUser()
+        {
+            try
+            {
+                var alllUser = await _userService.GetUsersAsync();
+                var userList = alllUser.Where(user => user.Role == "CUS") 
+                               .Select(user => new UserInfoModal
+                               {
+                                   UserName = user.UserName,
+                                   Email = user.Email,
+                                   Phone = user.Phone,
+                                   Position = user.Position,
+                                   Images = user.Image
+                               })
+                               .ToList();
 
+                return Ok(userList);
+
+            }
+              
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
