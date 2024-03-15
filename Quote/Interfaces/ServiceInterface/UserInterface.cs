@@ -9,7 +9,7 @@ namespace Quote.Interfaces.ServiceInterface
         Task<List<User>> GetUsersAsync();
         Task<User> RegisterAsync(RegisterModal user);
         Task<User> RegisterStaffAsync(User user);
-
+        Task<User> AddUserByGoogle(RegisterGoogle user);
         Task<User> UserById(int userId);
 
         Task<List<User>> GetStaffByStatus(int staffid);

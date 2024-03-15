@@ -1,5 +1,6 @@
 ﻿namespace Quote.Interfaces.RepositoryInterface
 {
+
     public interface IRepoBase<T> where T : class
     {
         Task<List<T>> GetAllAsync();
@@ -12,4 +13,5 @@
         IQueryable<T> GetInclude(params string[] navigationProperties);
         System.Threading.Tasks.Task Save();
     }
+
 }

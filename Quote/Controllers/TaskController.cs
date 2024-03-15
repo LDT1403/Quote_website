@@ -26,11 +26,7 @@ namespace Quote.Controllers
         {
             try
             {
-                var list = _taskService.GetTasks();
-                if(list == null)
-                {
-                    return BadRequest();
-                }
+                 var list = await _taskService.GetTasks();                              
                 return Ok(list);
             }catch (Exception ex)
             {
@@ -59,6 +55,7 @@ namespace Quote.Controllers
                         Email = request.Email,
                         Phone = request.Phone,
                         UserName = request.UserName,
+                        Status = task.Status,
 
                     };
                     listresponse.Add(response);
@@ -89,10 +86,10 @@ namespace Quote.Controllers
 
             var request = await _requestService.GetRequestById((int)Contractdata.RequestId);
             request.Status = "3";
-            var reUpdate = await _requestService.UpdateRequestUser(request);
+             await _requestService.UpdateRequestUser(request);
             var task = await _taskService.GetTaskById(Contractdata.taskId);
             task.Status = "2";
-            var taskUpdate = await _taskService.UpdateTasks(task);
+             await _taskService.UpdateTasks(task);
 
 
             var contract = new Models.Contract
@@ -104,6 +101,7 @@ namespace Quote.Controllers
             };
 
             var contractres = await _requestService.CreateContractUser(contract);
+
             string Filepath = GetContractFile(contractres.ContractId.ToString());
             if (!Directory.Exists(Filepath))
             {

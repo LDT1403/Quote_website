@@ -13,12 +13,52 @@ namespace Quote.Controllers
     {
         private readonly IRequestService _requestService;
         private readonly UserInterface _userInterface;
+        private readonly IContractService _contractService;
+        private readonly IPaymentService _paymentService;
 
-        public AdminController(IRequestService requestService, UserInterface userInterface)
+        public AdminController(IRequestService requestService, UserInterface userInterface, IContractService contractService)
         {
             _requestService = requestService;
             _userInterface = userInterface;
+            _contractService = contractService;
         }
+
+        [HttpGet("GetTotalMoney")]
+        public async Task<IActionResult> GetTotalMoney()
+        {
+            try
+            {
+                PayModal modal = new PayModal();
+
+                var list = await _contractService.GetAllContractsAsync();                           
+                double money = await _paymentService.TotalMoney();
+                var listST = await _userInterface.GetUsersAsync();
+                modal.TotalMoney = money.ToString();
+                modal.Contract = list?.Count().ToString();
+                modal.TotalStaff =listST?.Where(p => p.Role == "ST").Count().ToString();
+                return Ok(modal);
+
+            }catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetRervenueByYear()
+        {
+            try
+            {
+                var items = await _paymentService.RevernueByYear();
+                return Ok(items);
+
+            }catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
         [HttpGet("GetContractAdmin")]
         public async Task<IActionResult> GetContractAdmin(string status)
         {
