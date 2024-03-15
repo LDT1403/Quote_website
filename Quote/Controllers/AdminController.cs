@@ -15,6 +15,7 @@ namespace Quote.Controllers
         private readonly UserInterface _userInterface;
         private readonly IContractService _contractService;
         private readonly IPaymentService _paymentService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public AdminController(IRequestService requestService, UserInterface userInterface, IContractService contractService,IPaymentService paymentService)
         {
@@ -74,7 +75,7 @@ namespace Quote.Controllers
             }
         }
 
-
+      
         [HttpGet("GetContractAdmin")]
         public async Task<IActionResult> GetContractAdmin()
         {
@@ -119,16 +120,39 @@ namespace Quote.Controllers
             }
         }
         [HttpPost("ConfirmContract")]
-        public async Task<IActionResult> ConfirmContract(int contractId)
+        public async Task<IActionResult> ConfirmContract(ContractAdmin contractdata)
         {
             try {
-                
-                var contract = await _requestService.GetContractById(contractId);
-                contract.Status = "2";
-                await _requestService.UpdateContractUser(contract);
-                var request = await _requestService.GetRequestById((int)contract.RequestId);
-                request.Status = "4";
-                await _requestService.UpdateRequestUser(request);
+
+                string Filepath = GetContractFileAdmin(contractdata.contractId.ToString());
+                if (!Directory.Exists(Filepath))
+                {
+                    Directory.CreateDirectory(Filepath);
+                }
+
+                //var base64Data = Regex.Match(request.ContractFile, @"data:image\/[a-zA-Z]+;base64,(?<data>.+)").Groups["data"].Value;
+                //var imageBytes = Convert.FromBase64String(request.ContractFile);
+                using (var ms = new MemoryStream(contractdata.contractfile))
+                {
+                    var fileName = Guid.NewGuid().ToString() + ".pdf";
+                    var filePath = Path.Combine(Filepath, fileName);
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        ms.CopyTo(fileStream);
+
+                    }
+                    var datafile = GetContractPathAdmin(contractdata.contractId, fileName);
+                    var contracts = await _requestService.GetContractById((int)contractdata.contractId);
+                    contracts.Status = "2";
+                    contracts.ContractFile = datafile;
+                    await _requestService.UpdateContractUser(contracts);
+                    var requests = await _requestService.GetRequestById((int)contracts.RequestId);
+                    requests.Status = "4";
+                    await _requestService.UpdateRequestUser(requests);
+                    
+                }
+
+        
                 return Ok("Success"); 
             }
             catch (Exception ex) 
@@ -136,6 +160,18 @@ namespace Quote.Controllers
                 return BadRequest(ex.Message); 
             }
 
+        }
+        private string GetContractFileAdmin(string code)
+        {
+            return this._webHostEnvironment.WebRootPath + "\\Upload\\contract\\" + code;
+        }
+
+
+        [NonAction]
+        private string GetContractPathAdmin(int contractId, string fileName)
+        {
+            string hosturl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+            return hosturl + "\\Upload\\contract\\" + contractId + "/" + fileName;
         }
 
     }

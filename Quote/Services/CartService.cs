@@ -11,20 +11,20 @@ namespace Quote.Services
 {
     public class CartService : ICartService
     {
-        private readonly IRepoBase<CartDetail> _repository;
+       
         private readonly IRepoBase<Cart> _cartRepository;
 
-        public CartService(IRepoBase<CartDetail> repository, IRepoBase<Cart> cartRepository)
+        public CartService(IRepoBase<Cart> cartRepository)
         {
-            _repository = repository;
+          
             _cartRepository = cartRepository;
         }
 
-        public async Task<CartDetail> AddCartAsync(CartDetail cartDetail)
+        public async Task<Cart> AddCartAsync(Cart cartDetail)
         {
             try
             {
-                await _repository.AddAsync(cartDetail);
+                await _cartRepository.AddAsync(cartDetail);
                 return cartDetail;
             }
             catch (Exception ex)
@@ -33,24 +33,13 @@ namespace Quote.Services
             }
         }
 
-        public async Task<Cart> CreateCartOfUser(Cart cart)
-        {
-            try
-            {
-                await _cartRepository.AddReturnAsync(cart);
-                return cart;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error creating user's cart: " + ex.Message);
-            }
-        }
+
 
         public async Task<bool> DeleteCartDetail(int cartDetailId)
         {
             try
             {
-                return await _repository.DeleteItemAsync(cartDetailId);
+                return await _cartRepository.DeleteItemAsync(cartDetailId);
             }
             catch (Exception ex)
             {
@@ -58,7 +47,7 @@ namespace Quote.Services
             }
         }
 
-        public async Task<List<Cart>> GetCartAsync()
+        public async Task<List<Cart>> GetCartsAsync()
         {
             try
             {
@@ -66,15 +55,14 @@ namespace Quote.Services
             }
             catch (Exception ex)
             {
-                throw new Exception("Error getting cart IDs: " + ex.Message);
+                throw new Exception("Error getting carts: " + ex.Message);
             }
         }
-
-        public async Task<List<CartDetail>> GetCartsAsync()
+        public async Task<Cart> GetCartIdAsync(int cartId)
         {
             try
             {
-                return await _repository.GetAllAsync();
+                return await _cartRepository.GetByIdAsync(cartId);
             }
             catch (Exception ex)
             {

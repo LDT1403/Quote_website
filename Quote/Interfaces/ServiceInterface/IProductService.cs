@@ -10,7 +10,7 @@ namespace Quote.Interfaces.ServiceInterface
         Task<List<Option>> GetOptionAsync();
         Task<List<Category>> GetCategoryAsync();
         Task<Category> GetCategoryIdAsync(int cartId);
-        Task<Product> DeleteProduct(int id);
+        System.Threading.Tasks.Task DeleteProduct(int id);
 
         System.Threading.Tasks.Task Save();
 

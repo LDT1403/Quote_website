@@ -31,7 +31,7 @@ public partial class User
 
     public bool? IsDelete { get; set; }
 
-    public virtual Cart Cart { get; set; }
+    public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
     public virtual ICollection<User> InverseManager { get; set; } = new List<User>();
 

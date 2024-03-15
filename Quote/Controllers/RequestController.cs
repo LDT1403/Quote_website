@@ -48,6 +48,7 @@ namespace Quote.Controllers
                 UserId = requestdata.UserId,
                 Phone = requestdata.Phone,
                 UserName = requestdata.UserName,
+                DateCre = DateTime.Now,
             };
             var requestItem = await _requestService.CreateRequestUser(request);
             var productItem = await _productService.GetProductId((int)requestItem.ProductId);
@@ -98,6 +99,7 @@ namespace Quote.Controllers
                             dateSurvey = item.Date.ToString(),
                             requestId = item.RequestId,
                             status = "Đang Xử Lí",
+                            dateCreate=item.DateCre,
                             UserData = new RequestUser
                             {
                                 userEmail = item.Email,
@@ -136,15 +138,15 @@ namespace Quote.Controllers
                         var proCate = await _productService.GetCategoryIdAsync((int)dataPro.CategoryId);
                         var proimg = await _productService.GetImageAsync();
                         var thumb = proimg.Where(i => i.ProductId == dataPro.ProductId).FirstOrDefault();
-                        var taskL = await _taskInterface.GetTasks();
-                        var taskData = taskL.Where(t => t.RequestId == item.RequestId && t.Status == "1").FirstOrDefault();
-                        var staff = await _userInterface.GetUserIDAsync((int)taskData.UserId);
+                        var taskL = _taskInterface.GetTasks().Result.Where(t => t.RequestId == item.RequestId).FirstOrDefault();
+                        var staff = await _userInterface.GetUserIDAsync((int)taskL.UserId);
                         var dataAdd = new RequestStatusResqonse
                         {
                             address = item.Address,
                             dateSurvey = item.Date.ToString(),
                             requestId = item.RequestId,
                             status = "Chờ Khảo Sát",
+                            dateCreate = item.DateCre,
                             UserData = new RequestUser
                             {
                                 userEmail = item.Email,
@@ -165,7 +167,7 @@ namespace Quote.Controllers
                                 staffEmail = staff.Email,
                                 staffName = staff.UserName,
                                 staffPhone = staff.Phone,
-                                staffId = (int)taskData.UserId
+                                staffId = (int)staff.UserId
                             },
                             ContracData = new RequestContrac(),
 
@@ -195,6 +197,7 @@ namespace Quote.Controllers
                             dateSurvey = item.Date.ToString(),
                             requestId = item.RequestId,
                             status = "Chờ Báo Giá",
+
                             UserData = new RequestUser
                             {
                                 userEmail = item.Email,
@@ -246,6 +249,7 @@ namespace Quote.Controllers
                             dateSurvey = item.Date.ToString(),
                             requestId = item.RequestId,
                             status = "Đã Báo Giá",
+                            dateCreate = item.DateCre,
                             UserData = new RequestUser
                             {
                                 userEmail = item.Email,

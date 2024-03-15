@@ -5,7 +5,7 @@
         public int requestId { get; set; }
         public string status { get; set; }
         public string? dateSurvey { get; set; }
-        public string? dateCreate { get; set; }
+        public DateTime? dateCreate { get; set; }
         public string? address { get; set; }
 
         public RequestUser? UserData { get; set; }

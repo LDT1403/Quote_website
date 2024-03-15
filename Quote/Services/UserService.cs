@@ -28,28 +28,30 @@ namespace Quote.Services
             {
                 var list = await _repo.GetAllAsync();
 
-                if(list != null) {
+                if (list != null)
+                {
                     list = list.Where(p => p.ManagerId == staffid).ToList();
                     return list;
                 }
                 return null;
 
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
 
-        
+
         public async Task<List<User>> GetStaffByStatus(int staffid)
         {
             try
             {
                 var list = await _repo.GetAllAsync();
 
-                if(list != null)
+                if (list != null)
                 {
-                    list = list.Where(p=> p.ManagerId == staffid && p.Status == "0").ToList();
+                    list = list.Where(p => p.ManagerId == staffid && p.Status == "0").ToList();
                     return list;
                 }
                 else
@@ -57,7 +59,8 @@ namespace Quote.Services
                     return null;
                 }
 
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -86,22 +89,40 @@ namespace Quote.Services
             }
         }
 
+        public async Task<User> AddUserByGoogle(RegisterGoogle user)
+        {
+            try
+            {
+                User userModel = _mapper.Map<RegisterGoogle, User>(user);
+                userModel.Role = "CUS";
+                userModel.Password = "123456";
+                userModel.Position = "Người Dùng Google";
+                var useData = await _repo.AddAsync(userModel);
+                return useData;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error registering user: " + ex.Message);
+            }
+        }
+
         public async Task<User> RegisterAsync(RegisterModal user)
         {
             try
             {
                 var list = await _repo.GetAllAsync();
-                foreach(var item in list)
+                foreach (var item in list)
                 {
-                    if(item.Email == user.Email)
+                    if (item.Email == user.Email)
                     {
                         return null;
                     }
-                }            
-                    User userModel = _mapper.Map<RegisterModal, User>(user);
-                    userModel.Role = "CUS";
-                    await _repo.AddAsync(userModel);
-                    return userModel;               
+                }
+                User userModel = _mapper.Map<RegisterModal, User>(user);
+                userModel.Role = "CUS";
+                userModel.Position = "Người Dùng Hệ Thống";
+                await _repo.AddAsync(userModel);
+                return userModel;
             }
             catch (Exception ex)
             {
@@ -115,7 +136,8 @@ namespace Quote.Services
             {
                 var user = await _repo.GetByIdAsync(userId);
                 return user;
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception("Error registering user: " + ex.Message);
             }
@@ -133,7 +155,8 @@ namespace Quote.Services
                 }
                 return item;
 
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception("Error registering user: " + ex.Message);
             }
@@ -145,14 +168,14 @@ namespace Quote.Services
                 var list = await _repo.GetAllAsync();
                 foreach (var item in list)
                 {
-                    if(item.Email == user.Email)
+                    if (item.Email == user.Email)
                     {
                         return null;
                     }
-                }              
-                    user.Role = "ST";
-                    await _repo.AddAsync(user);
-                    return user;              
+                }
+                user.Role = "ST";
+                await _repo.AddAsync(user);
+                return user;
             }
             catch (Exception ex)
             {
