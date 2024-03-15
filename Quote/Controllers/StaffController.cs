@@ -162,13 +162,13 @@ namespace Quote.Controllers
         [NonAction]
         private string GetFilepath(string code)
         {
-            return this._webHostEnvironment.WebRootPath + "\\Upload\\product\\" + code;
+            return this._webHostEnvironment.WebRootPath + "//Upload//product//" + code;
         }
         [NonAction]
         private string GetImageProductPath(int productId, string fileName)
         {
             string hosturl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
-            return hosturl + "\\Upload\\product\\" + productId + "/" + fileName;
+            return hosturl + "//Upload//product//" + productId + "/" + fileName;
 
         }
 

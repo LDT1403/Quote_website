@@ -72,13 +72,13 @@ namespace Quote.Controllers
         }
         private string GetContractFile(string code)
         {
-            return this._webHostEnvironment.WebRootPath + "\\Upload\\contract\\" + code;
+            return this._webHostEnvironment.WebRootPath + "//Upload//contract//" + code;
         }
         [NonAction]
         private string GetContractPath(int contractId, string fileName)
         {
             string hosturl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
-            return hosturl + "\\Upload\\contract\\" + contractId + "/" + fileName;
+            return hosturl + "//Upload//contract//" + contractId + "/" + fileName;
         }
         [HttpPost("CreateContractStaff")]
         public async Task<ActionResult<Models.Contract>> CreateContractStaff([FromForm] CreateContractModel Contractdata)
@@ -98,6 +98,7 @@ namespace Quote.Controllers
                 ConPrice = Contractdata.ConPrice,
                 FinalPrice = Contractdata.FinalPrice,
                 Status = Contractdata.Status,
+                Date = DateTime.Now,
             };
 
             var contractres = await _requestService.CreateContractUser(contract);
