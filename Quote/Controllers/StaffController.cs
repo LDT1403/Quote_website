@@ -109,7 +109,9 @@ namespace Quote.Controllers
             try
             {
                 var allPro = await _productService.GetAllProduct();
-                
+                if(allPro == null) { 
+                return Ok(null);
+                }
                 var productWithCate = new List<ProductAllResponse>();
                 foreach (var cate in allPro)
                 {
